@@ -1,0 +1,56 @@
+@import "./base.css";
+
+#app{
+    background-color: #111436;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#musicCard{
+    width: 50%;
+    height: 75vh;
+    /*margin-left: 25%;*/
+    margin-top: 2%;
+    background-color: #262335;
+    /*position: absolute;*/
+    background-image: radial-gradient(circle at 100% 100%, transparent 15px, #d82bfd 15px, #d82bfd 20px, transparent 20px), linear-gradient(to right, #d82bfd, #304ffe), radial-gradient(circle at 0% 100%, transparent 15px, #304ffe 15px, #304ffe 20px, transparent 20px), linear-gradient(to bottom, #304ffe, #7c219e), radial-gradient(circle at 0% 0%, transparent 15px, #7c219e 15px, #7c219e 20px, transparent 20px), linear-gradient(to left, #7c219e, #fb9804), radial-gradient(circle at 100% 0%, transparent 15px, #fb9804 15px, #fb9804 20px, transparent 20px), linear-gradient(to top, #fb9804, #d82bfd);
+    background-size: 20px 20px, calc(100% - 40px) 5px, 20px 20px, 5px calc(100% - 40px);
+    background-position: top left,top center,top right,center right, bottom right,bottom center,bottom left,center left;
+    background-repeat: no-repeat;
+    border-radius: 2%;
+}
+
+body, html {
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    color: honeydew;
+}
+
+.button{
+    width: fit-content;
+    background-color: blueviolet;
+    padding: 1em;
+    text-align: center;
+    height: fit-content;
+}
+
+.button:hover{
+    cursor: pointer;
+}
+
+.row{
+    text-align: center;
+    width: 100%;
+    margin-top: 5%;
+}
+
+#loginSpotify{
+    float: right;
+}
+
+.card{
+    width: 50%;
+    margin-left: 25%;
+    position: absolute;
+}
