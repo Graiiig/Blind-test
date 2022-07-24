@@ -13,10 +13,10 @@ export default {
 }
 </script>
 <template>
-  <div class="card" style="margin-top: 1%; justify-content: center;display: flex;" :style="showMenuAddPlayer ? 'visibility: visible;' : 'visibility: hidden;'">
-    <div class="addUser" style="display: flex; justify-content: space-around;  width: 50%; height: 10%">
+  <div class="card" :style="showMenuAddPlayer ? 'visibility: visible;' : 'visibility: hidden;'">
+    <div class="addUser flex space-around">
       <input id="username" placeholder="Pseudo">
-      <input id="buzzer" placeholder="N° du Buzzer">
+<!--      <input id="buzzer" placeholder="N° du Buzzer">-->
       <span id="addUser" class="button" @click="$emit('addUser')">Ajouter un utilisateur</span>
     </div>
   </div>

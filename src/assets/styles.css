@@ -13,6 +13,18 @@
     margin-top: 2%;
 }
 
+.imgMusic{
+    filter: blur(1rem);
+    width: 20vw
+}
+
+.imgMusicCard{
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+
 body, html {
     margin: 0;
     font-family: 'Raleway', sans-serif;
@@ -34,17 +46,19 @@ body, html {
 .row{
     text-align: center;
     width: 100%;
-    margin-top: 5%;
+    margin-top: 5vh;
 }
 
 #loginSpotify{
     float: right;
+    margin-top: 3%;
+    width: 30vh;
 }
 
 .card{
-    width: 50%;
-    margin-left: 25%;
-    position: absolute;
+    margin-left: 37.5vw;
+    width: 25vw;
+    margin-top: 1%;
 }
 
 .borderColored{
@@ -57,9 +71,12 @@ body, html {
 }
 
 .playersList{
-    padding: 1% 0 0 1%;
-    height: 50vh;
+    padding: 2vh 2vh 2vh 2vh;
+    height: fit-content;
+    min-height: 15vh;
     border-radius: 6%;
+    width: 15%;
+    margin-top: 3%
 }
 
 .buzzer {
@@ -81,4 +98,75 @@ body, html {
 .buzzer:active {
     position:relative;
     top:1px;
+}
+
+.flex {
+    display: flex;
+}
+
+.space-around{
+    justify-content: space-around;
+}
+
+.musicPlayingIcon{
+    float: right;
+    margin-top: 2%;
+    margin-right: 4%;
+    font-size: 4vw;
+}
+
+.addUser{
+    /*width: 25%;*/
+    height: 10%;
+    align-content: center;
+}
+
+/* Media queries pour les téléphones */
+@media only screen and (max-width: 600px) {
+
+    #app{
+        height: 200vh;
+    }
+
+    main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .playersList{;
+        width: 80%;
+    }
+
+    #musicCard{
+        width: 80%;
+        height: 75vh;
+        margin-top: 2%;
+    }
+
+    .imgMusic{
+        width: 20vh
+    }
+
+    .musicPlayingIcon{;
+        font-size: 15vw;
+    }
+
+    #loginSpotify{
+        margin-top: 10%;
+    }
+
+    .addUser{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card{
+        width: 100vw;
+        margin-top: 10%;
+        margin-left: 0;
+    }
+
+    #username, #buzzer, #addUser{
+        width: 70vw;
+    }
 }

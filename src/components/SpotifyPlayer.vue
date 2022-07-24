@@ -17,16 +17,16 @@ export default {
     setNextTrack : Number
   },
   watch : {
-    clicker : function (val) {
+    clicker(val) {
       this.togglePlayPlayer();
     },
-    spotifyToken : function () {
+    spotifyToken() {
       this.$emit('setMusicPlayerStatus', {
         isMusicPlaying : false,
         spotifyToken : this.spotifyToken
       });
     },
-    setNextTrack : function (){
+    setNextTrack(){
       this.nextTrackPlayer();
     }
   },
@@ -132,18 +132,20 @@ export default {
 </script>
 <template>
   <div id="musicCard" class="borderColored">
-    <span style="float: right; margin-top: 2%; margin-right: 4%; font-size: 5em" :style="isMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="isMusicPlaying" /></span>
+    <span class="musicPlayingIcon" :style="isMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="isMusicPlaying" /></span>
     <br>
-    <img style="filter: blur(1rem); margin-left: 30%; margin-top: 10%; width: 400px" :src="imgLink" alt="image album">
-    <br>
-    <div class="row">
-      <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="isMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="isMusicPlaying"/></span>
+    <div class="space-around flex imgMusicCard">
+      <img class="imgMusic" :src="imgLink" alt="image album">
       <br>
+      <div class="row">
+        <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="isMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="isMusicPlaying"/></span>
+        <br>
+        <br>
+        <br>
+        <span>Musique en cours : {{currentPlaying}}</span>
+      </div>
       <br>
-      <br>
-      <span>Musique en cours : {{currentPlaying}}</span>
     </div>
-    <br>
   </div>
-  <span id="loginSpotify" style="margin-top: 3%;width: 15%" class="button" @click="requestAuth()">{{messageSpotify}}</span>
+  <span id="loginSpotify" class="button" @click="requestAuth()">{{messageSpotify}}</span>
 </template>

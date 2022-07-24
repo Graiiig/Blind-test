@@ -11,11 +11,16 @@ export default {
     users : Object,
     spotifyToken : String
   },
+  methods : {
+    removeUser(idFb){
+      this.$emit('removeUser', idFb)
+    }
+  }
 }
 </script>
 <template>
-  <div style="width: 15%; margin-top: 3%" class="borderColored playersList">
+  <div class="borderColored playersList">
     <h3 >Joueurs : <span style="cursor: pointer" @click="$emit('showMenuAddPlayer')"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
-    <Players :spotifyToken="spotifyToken" :users="users"/>
+    <Players :spotifyToken="spotifyToken" :users="users" @remove-user="removeUser"/>
   </div>
 </template>

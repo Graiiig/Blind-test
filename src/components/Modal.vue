@@ -1,5 +1,5 @@
 <script>
-import {db, ref, set, push, onChildChanged, onValue, remove, query, orderByChild} from '../assets/js/firebase.js';
+import {db, ref, set, onValue} from '../assets/js/firebase.js';
 
 export default {
   data() {
@@ -13,7 +13,7 @@ export default {
     points : Number
   },
   watch : {
-    clicker : function () {
+    clicker() {
       if (this.isMusicPlaying){
         this.open = true;
       }

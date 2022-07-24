@@ -26,9 +26,9 @@ export default {
 </script>
 <template>
   <div v-for="(user, key) in users">
-    <div style="display: flex;align-items: center;" @click="goToBuzzer(user)">
+    <div style="display: flex;align-items: center;">
       <img style="width:50px" :src="user.profilePicture" alt="Image de profile d'un utilisateur"/>
-      <span style="margin-left: 1%">{{ user.username }} ({{ user.buzzerId }}) ({{user.points}} points)</span>
+      <span style="margin-left: 1%"  @click="goToBuzzer(user)">{{ user.username }} ({{user.points}} points)</span>
       <span style="margin-left: 7%; color: #c03333; cursor: pointer" @click="$emit('removeUser', key)"><font-awesome-icon icon="fa-solid fa-trash-can"/></span>
     </div>
   </div>

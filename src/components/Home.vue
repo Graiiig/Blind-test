@@ -32,7 +32,7 @@ export default {
     addUser() {
       // Récupération des infos de l'utilisateur
       let username = document.querySelector('#username').value;
-      let buzzerId = document.querySelector('#buzzer').value;
+      // let buzzerId = document.querySelector('#buzzer').value;
 
       // Génération d'un id pour le state pour l'api Dicebear
       let id = new Date();
@@ -43,7 +43,7 @@ export default {
 
       // On push vers firebase le nouvel utilisateur
       push(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS), {
-        "buzzerId": buzzerId,
+        "buzzerId": 0,
         "username": username,
         "profilePicture" : profilePicture,
         "points" : 0
@@ -52,7 +52,6 @@ export default {
       // On cache le menu d'ajout d'un nouvel utilisateur
       this.showMenuAddPlayer = false;
     },
-
     // Suppression d'un utilisateur dans la BDD
     removeUser(idFb){
       remove(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS+'/'+idFb));
@@ -75,33 +74,21 @@ export default {
       }
     }
   },
-  computed: {
-    // Récupère l'utilisateur depuis la BDD quand celui-ci clique sur le buzzer
-    getClickerFromDb: function () {
-      let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
-      onChildChanged(clickerDb, (data) => {
-        if (this.isMusicPlaying) {
-          this.clicker = data.val();
-          this.blur = "filter : blur(60px);";
-        }
-      });
-    },
-    // Récupère les utilisateurs depuis la BDD
-    getUsersFromDb: function () {
-      let userDb = ref(db, import.meta.env.VITE_FIREBASE_DB_USERS);
-      onValue(userDb, (data) => {
-        this.users = data.val();
-      });
-    }
-  },
-  created : function(){
-    // Retourne le dernier gagnant inscrit en BDD
-    // let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
-    // onValue(clickerDb, (snapshot) => {
-    //   this.clicker = snapshot.val().nom;
-    //   return snapshot.val().nom;
-    // });
+  created(){
+    // Récupération des users en BDD à la création du component
+    let userDb = ref(db, import.meta.env.VITE_FIREBASE_DB_USERS);
+    onValue(userDb, (data) => {
+      this.users = data.val();
+    });
 
+    // Récupère l'utilisateur depuis la BDD quand celui-ci clique sur le buzzer
+    let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
+    onChildChanged(clickerDb, (data) => {
+      if (this.isMusicPlaying) {
+        this.clicker = data.val();
+        this.blur = "filter : blur(60px);";
+      }
+    });
     // Fonctionnel - Commenté pour l'instant car coùte des calls API (50 gratuits par heure)
     // Choisit une image sur le thème de la musique au hasard dans la base de données unsplash
     // Et la met en fond d'écran de l'app
@@ -120,7 +107,7 @@ export default {
 </script>
 
 <template>
-  <main style="display: flex;justify-content: space-around;" :style="blur">
+  <main class="flex space-around" :style="blur">
     <PlayersList :spotifyToken="spotifyToken" :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
     <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack"/>
   </main>
