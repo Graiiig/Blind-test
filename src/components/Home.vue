@@ -2,25 +2,11 @@
 import SpotifyPlayer from '../components/SpotifyPlayer.vue'
 import PlayersList from '../components/PlayersList.vue'
 import AddPlayer from '../components/AddPlayer.vue'
+import Modal from '../components/Modal.vue'
 </script>
 
 <script>
-import {getDatabase, ref, set, push, onChildChanged, onValue, remove } from 'firebase/database'
-import {initializeApp} from 'firebase/app'
-
-// Récupération de la config Firebase depuis .env
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
-};
-const appFb = initializeApp(firebaseConfig);
-
-const db = getDatabase();
+import {db, ref, set, push, onChildChanged, onValue, remove} from '../assets/js/firebase.js';
 
 export default {
   data() {
@@ -31,10 +17,16 @@ export default {
       playerName : 'Blind test by Graig',
       showMenuAddPlayer : false,
       isMusicPlaying :false,
-      version : import.meta.env.VITE_VERSION
+      version : import.meta.env.VITE_VERSION,
+      spotifyToken : '',
+      blur : "filter : blur(0px);"
     }
   },
   methods: {
+    setDataFirebase(node, data){
+      // On push vers firebase le nouvel utilisateur
+      set(ref(db, node), data);
+    },
     // Ajout d'un utilisateur dans la bdd
     addUser() {
       // Récupération des infos de l'utilisateur
@@ -52,7 +44,8 @@ export default {
       push(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS), {
         "buzzerId": buzzerId,
         "username": username,
-        "profilePicture" : profilePicture
+        "profilePicture" : profilePicture,
+        "points" : 0
       }).key;
 
       // On cache le menu d'ajout d'un nouvel utilisateur
@@ -66,10 +59,14 @@ export default {
     showMenuAddPlayerFunction() {
       this.showMenuAddPlayer = !this.showMenuAddPlayer;
     },
-    setMusicStatusPlayer(status){
-       // TODO : Le status ne remote pas jusque ici
-      console.log("status", status)
-      this.isMusicPlaying = status;
+    setMusicStatusPlayer(dataSpotifyPlayer){
+      this.isMusicPlaying = dataSpotifyPlayer.isMusicPlaying;
+      this.spotifyToken = dataSpotifyPlayer.spotifyToken;
+    },
+    resetBlurAndWinner(){
+      this.clicker = '';
+      this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_CLICKER, {'nom' : ''})
+      this.blur = "filter : blur(0px);";
     }
   },
   computed: {
@@ -77,8 +74,10 @@ export default {
     getClickerFromDb: function () {
       let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
       onChildChanged(clickerDb, (data) => {
-        this.clicker = data.val();
-        this.isMusicPlaying = !this.isMusicPlaying
+        if (this.isMusicPlaying) {
+          this.clicker = data.val();
+          this.blur = "filter : blur(60px);";
+        }
       });
     },
     // Récupère les utilisateurs depuis la BDD
@@ -91,11 +90,11 @@ export default {
   },
   created : function(){
     // Retourne le dernier gagnant inscrit en BDD
-    let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
-    onValue(clickerDb, (snapshot) => {
-      this.clicker = snapshot.val().nom;
-      return snapshot.val().nom;
-    });
+    // let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
+    // onValue(clickerDb, (snapshot) => {
+    //   this.clicker = snapshot.val().nom;
+    //   return snapshot.val().nom;
+    // });
 
     // Fonctionnel - Commenté pour l'instant car coùte des calls API (50 gratuits par heure)
     // Choisit une image sur le thème de la musique au hasard dans la base de données unsplash
@@ -108,15 +107,18 @@ export default {
     //     .then(data => {
     //         document.querySelector('#app').style.backgroundImage = "url(" + data.urls.full + ")";
     //     })
+    document.querySelector('#app').style.backgroundImage = "url('https://images.unsplash.com/photo-1466428996289-fb355538da1b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNDg3OTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg1OTQ2OTU&ixlib=rb-1.2.1&q=80')";
+    // document.querySelector('#app').style.backgroundImage = "url('https://images.unsplash.com/photo-1501612780327-45045538702b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNDg3OTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg1OTQ2Mzc&ixlib=rb-1.2.1&q=80')";
   }
 }
 </script>
 
 <template>
-  <main style="display: flex;justify-content: space-around;">
-    <PlayersList :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
+  <main style="display: flex;justify-content: space-around;" :style="blur">
+    <PlayersList :spotifyToken="spotifyToken" :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
     <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker"/>
   </main>
   <AddPlayer :showMenuAddPlayer="showMenuAddPlayer" @add-user="addUser"/>
+  <Modal :isMusicPlaying="isMusicPlaying" :clicker="clicker" @reset-blur-and-winner="resetBlurAndWinner"/>
 </template>
 

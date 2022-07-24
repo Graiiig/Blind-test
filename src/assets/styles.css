@@ -10,15 +10,7 @@
 #musicCard{
     width: 50%;
     height: 75vh;
-    /*margin-left: 25%;*/
     margin-top: 2%;
-    background-color: #262335;
-    /*position: absolute;*/
-    background-image: radial-gradient(circle at 100% 100%, transparent 15px, #d82bfd 15px, #d82bfd 20px, transparent 20px), linear-gradient(to right, #d82bfd, #304ffe), radial-gradient(circle at 0% 100%, transparent 15px, #304ffe 15px, #304ffe 20px, transparent 20px), linear-gradient(to bottom, #304ffe, #7c219e), radial-gradient(circle at 0% 0%, transparent 15px, #7c219e 15px, #7c219e 20px, transparent 20px), linear-gradient(to left, #7c219e, #fb9804), radial-gradient(circle at 100% 0%, transparent 15px, #fb9804 15px, #fb9804 20px, transparent 20px), linear-gradient(to top, #fb9804, #d82bfd);
-    background-size: 20px 20px, calc(100% - 40px) 5px, 20px 20px, 5px calc(100% - 40px);
-    background-position: top left,top center,top right,center right, bottom right,bottom center,bottom left,center left;
-    background-repeat: no-repeat;
-    border-radius: 2%;
 }
 
 body, html {
@@ -53,4 +45,40 @@ body, html {
     width: 50%;
     margin-left: 25%;
     position: absolute;
+}
+
+.borderColored{
+    background-color: #262335;
+    background-image: radial-gradient(circle at 100% 100%, transparent 15px, #d82bfd 15px, #d82bfd 20px, transparent 20px), linear-gradient(to right, #d82bfd, #304ffe), radial-gradient(circle at 0% 100%, transparent 15px, #304ffe 15px, #304ffe 20px, transparent 20px), linear-gradient(to bottom, #304ffe, #7c219e), radial-gradient(circle at 0% 0%, transparent 15px, #7c219e 15px, #7c219e 20px, transparent 20px), linear-gradient(to left, #7c219e, #fb9804), radial-gradient(circle at 100% 0%, transparent 15px, #fb9804 15px, #fb9804 20px, transparent 20px), linear-gradient(to top, #fb9804, #d82bfd);
+    background-size: 20px 20px, calc(100% - 40px) 5px, 20px 20px, 5px calc(100% - 40px);
+    background-position: top left,top center,top right,center right, bottom right,bottom center,bottom left,center left;
+    background-repeat: no-repeat;
+    border-radius: 3%;
+}
+
+.playersList{
+    padding: 1% 0 0 1%;
+    height: 50vh;
+    border-radius: 6%;
+}
+
+.buzzer {
+    box-shadow: 3px 4px 0px 0px #8a2a21;
+    background: #c62d1f linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
+    border-radius:42px;
+    border:1px solid #d02718;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:17px;
+    padding:65px 55px;
+    text-decoration:none;
+    text-shadow:0 1px 0 #810e05;
+}
+.buzzer:hover {
+    background: #f24437 linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
+}
+.buzzer:active {
+    position:relative;
+    top:1px;
 }

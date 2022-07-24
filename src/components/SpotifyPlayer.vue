@@ -8,6 +8,7 @@ export default {
       imgLink: 'https://picsum.photos/400',
       messageSpotify: 'Se connecter à Spotify',
       playerName: 'Blind test by Graig',
+      spotifyToken : ''
     }
   },
   props : {
@@ -17,13 +18,22 @@ export default {
   watch : {
     clicker : function (val) {
       this.togglePlayPlayer();
+    },
+    spotifyToken : function () {
+      this.$emit('setMusicPlayerStatus', {
+        isMusicPlaying : false,
+        spotifyToken : this.spotifyToken
+      });
     }
   },
   methods: {
     // Permet de faire play/pause
     togglePlayPlayer() {
       player.togglePlay();
-      this.$emit('setMusicPlayerStatus', !this.isMusicPlaying);
+      this.$emit('setMusicPlayerStatus', {
+        isMusicPlaying : !this.isMusicPlaying,
+        spotifyToken : this.spotifyToken
+    });
     },
     // Permet d'initier le process d'identification Spotify
     requestAuth(){
@@ -48,6 +58,8 @@ export default {
         token = params.split('&');
         token = token[0].slice(14);
       }
+
+      this.spotifyToken = token;
       player = new Spotify.Player({
         name: this.playerName,
         getOAuthToken: cb => {
@@ -70,15 +82,17 @@ export default {
       });
 
       player.addListener('initialization_error', ({message}) => {
-        console.error(message);
+        console.error('initialization_error', message);
       });
 
       player.addListener('authentication_error', ({message}) => {
-        console.error(message);
+        console.error('authentication_error', message);
+        // Permet de se relogguer si le token est expiré !
+        this.requestAuth();
       });
 
       player.addListener('account_error', ({message}) => {
-        console.error(message);
+        console.error('account_error', message);
       });
 
       //--------------- FIN LOGS Spotify -----------------//
@@ -105,13 +119,13 @@ export default {
 }
 </script>
 <template>
-  <div id="musicCard">
-    <span style="float: right; margin-top: 4%; margin-right: 4%; font-size: 5em" :style="isMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-music" /></span>
+  <div id="musicCard" class="borderColored">
+    <span style="float: right; margin-top: 2%; margin-right: 4%; font-size: 5em" :style="isMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="isMusicPlaying" /></span>
     <br>
-    <img style="filter: blur(1rem); margin-left: 32%; margin-top: 10%; width: 400px" :src="imgLink" alt="image album">
+    <img style="filter: blur(1rem); margin-left: 30%; margin-top: 10%; width: 400px" :src="imgLink" alt="image album">
     <br>
     <div class="row">
-      <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon icon="fa-solid fa-play" /> / <font-awesome-icon icon="fa-solid fa-pause" /></span>
+      <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="isMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="isMusicPlaying"/></span>
       <br>
       <br>
       <br>

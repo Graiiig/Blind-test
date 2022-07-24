@@ -8,13 +8,14 @@ export default {
     }
   },
   props : {
-    users : Object
+    users : Object,
+    spotifyToken : String
   },
 }
 </script>
 <template>
-  <div style="width: 15%; margin-top: 3%">
-    <h3 >Joueurs : <span @click="$emit('showMenuAddPlayer')"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
-    <Players :users="users"/>
+  <div style="width: 15%; margin-top: 3%" class="borderColored playersList">
+    <h3 >Joueurs : <span style="cursor: pointer" @click="$emit('showMenuAddPlayer')"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
+    <Players :spotifyToken="spotifyToken" :users="users"/>
   </div>
 </template>
