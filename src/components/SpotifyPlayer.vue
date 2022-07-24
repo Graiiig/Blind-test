@@ -13,7 +13,8 @@ export default {
   },
   props : {
     isMusicPlaying : Boolean,
-    clicker : String
+    clicker : String,
+    setNextTrack : Number
   },
   watch : {
     clicker : function (val) {
@@ -24,6 +25,9 @@ export default {
         isMusicPlaying : false,
         spotifyToken : this.spotifyToken
       });
+    },
+    setNextTrack : function (){
+      this.nextTrackPlayer();
     }
   },
   methods: {
@@ -34,6 +38,14 @@ export default {
         isMusicPlaying : !this.isMusicPlaying,
         spotifyToken : this.spotifyToken
     });
+    },
+    nextTrackPlayer(){
+      console.log('ca va jusque ici')
+      // Le code va bien jusque ici mais ne met pas pause - requête post Spotify erreur 500
+      player.nextTrack()
+    },
+    previousTrackPlayer(){
+      player.previousTrack()
     },
     // Permet d'initier le process d'identification Spotify
     requestAuth(){

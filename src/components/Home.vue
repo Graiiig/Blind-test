@@ -19,7 +19,8 @@ export default {
       isMusicPlaying :false,
       version : import.meta.env.VITE_VERSION,
       spotifyToken : '',
-      blur : "filter : blur(0px);"
+      blur : "filter : blur(0px);",
+      nextTrack : 0
     }
   },
   methods: {
@@ -63,10 +64,15 @@ export default {
       this.isMusicPlaying = dataSpotifyPlayer.isMusicPlaying;
       this.spotifyToken = dataSpotifyPlayer.spotifyToken;
     },
-    resetBlurAndWinner(){
+    resetBlurAndWinner(nextTrack){
       this.clicker = '';
       this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_CLICKER, {'nom' : ''})
       this.blur = "filter : blur(0px);";
+      console.log(nextTrack)
+      if (nextTrack){
+        let today= new Date();
+        this.nextTrack = today.getTime()
+      }
     }
   },
   computed: {
@@ -116,7 +122,7 @@ export default {
 <template>
   <main style="display: flex;justify-content: space-around;" :style="blur">
     <PlayersList :spotifyToken="spotifyToken" :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
-    <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker"/>
+    <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack"/>
   </main>
   <AddPlayer :showMenuAddPlayer="showMenuAddPlayer" @add-user="addUser"/>
   <Modal :isMusicPlaying="isMusicPlaying" :clicker="clicker" @reset-blur-and-winner="resetBlurAndWinner"/>

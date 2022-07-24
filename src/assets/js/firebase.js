@@ -1,4 +1,4 @@
-import {getDatabase, ref, set, push, onChildChanged, onValue, remove } from 'firebase/database'
+import {getDatabase, ref, set, push, onChildChanged, onValue, remove, query, orderByChild } from 'firebase/database'
 import {initializeApp} from 'firebase/app'
 
 // Récupération de la config Firebase depuis .env
@@ -15,4 +15,4 @@ const appFb = initializeApp(firebaseConfig);
 
 const db = getDatabase();
 
-export {db, ref, set, push, onChildChanged, onValue, remove}
+export {db, ref, set, push, onChildChanged, onValue, remove, query, orderByChild}
