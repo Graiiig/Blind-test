@@ -64,13 +64,18 @@ export default {
       this.spotifyToken = dataSpotifyPlayer.spotifyToken;
     },
     resetBlurAndWinner(nextTrack){
-      this.clicker = '';
-      this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_CLICKER, {'nom' : ''})
       this.blur = "filter : blur(0px);";
-      console.log(nextTrack)
+
+      // Si la personne a trouvé artiste + titre, on passe à la musique suivante
       if (nextTrack){
+        this.isMusicPlaying = true;
         let today= new Date();
         this.nextTrack = today.getTime()
+      }
+      // Sinon on reset juste le dernier clicker
+      else {
+        this.clicker = '';
+        this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_CLICKER, {'nom' : ''})
       }
     }
   },

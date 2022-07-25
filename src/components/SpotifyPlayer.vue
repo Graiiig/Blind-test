@@ -40,8 +40,6 @@ export default {
     });
     },
     nextTrackPlayer(){
-      console.log('ca va jusque ici')
-      // Le code va bien jusque ici mais ne met pas pause - requête post Spotify erreur 500
       player.nextTrack()
     },
     previousTrackPlayer(){
@@ -138,7 +136,9 @@ export default {
       <img class="imgMusic" :src="imgLink" alt="image album">
       <br>
       <div class="row">
+        <span id="previousTrack" class="button" @click="previousTrackPlayer()"><font-awesome-icon icon="fa-solid fa-backward-step"/></span>
         <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="isMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="isMusicPlaying"/></span>
+        <span id="nextTrack" class="button" @click="nextTrackPlayer()"><font-awesome-icon icon="fa-solid fa-forward-step"/></span>
         <br>
         <br>
         <br>
