@@ -21,3 +21,6 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Documentations :
+- [Authentification Firebase](https://firebase.google.com/docs/auth/web/google-signin?authuser=0)

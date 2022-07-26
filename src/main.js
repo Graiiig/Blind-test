@@ -15,7 +15,7 @@ const router = createRouter({
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlay, faPause, faPlusCircle, faMusic, faTrashCan, faHome, faCompactDisc, faMicrophoneLines, faCircleXmark, faForwardStep, faBackwardStep } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPause, faPlusCircle, faMusic, faTrashCan, faHome, faCompactDisc, faMicrophoneLines, faCircleXmark, faForwardStep, faBackwardStep} from "@fortawesome/free-solid-svg-icons";
 // Ajout des icones dont on a besoin à la librairie
 library.add(faPlay, faPause, faPlusCircle, faMusic, faTrashCan, faHome, faCompactDisc, faMicrophoneLines, faCircleXmark, faForwardStep, faBackwardStep);
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'

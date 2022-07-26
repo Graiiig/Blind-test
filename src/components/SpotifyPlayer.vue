@@ -1,3 +1,6 @@
+<script setup>
+  import GoogleLogin from './GoogleLogin.vue'
+</script>
 <script>
 let player;
 
@@ -46,7 +49,7 @@ export default {
       player.previousTrack()
     },
     // Permet d'initier le process d'identification Spotify
-    requestAuth(){
+    requestSpotifyAuth(){
       let scope = 'user-read-private user-read-email user-read-currently-playing user-read-playback-state streaming playlist-modify-private user-library-read user-read-private';
       let url = 'https://accounts.spotify.com/authorize';
       url += '?response_type=token';
@@ -55,7 +58,7 @@ export default {
       url += '&redirect_uri=' + encodeURIComponent(import.meta.env.VITE_SPOTIFY_REDIRECT_URI);
       url += '&show_dialog=true';
       window.location.href = url;
-    }
+    },
   },
   created() {
     // Initie la création du player spotify
@@ -147,5 +150,9 @@ export default {
       <br>
     </div>
   </div>
-  <span id="loginSpotify" class="button" @click="requestAuth()">{{messageSpotify}}</span>
+  <div class="flex" style="flex-direction: column">
+
+  <span id="loginSpotify" class="button" @click="requestSpotifyAuth()">{{messageSpotify}}</span>
+  <GoogleLogin/>
+  </div>
 </template>
