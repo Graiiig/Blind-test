@@ -1,6 +1,6 @@
 # CHANGELOG.md
 
-## 1.0.1 (En cours)
+## 1.0.1 (2022-07-28)
 
 - Gestion des points
 - Modale pour afficher qui a buzzé
