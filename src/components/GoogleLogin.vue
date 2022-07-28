@@ -7,12 +7,18 @@ export default {
     }
   },
   props : {
+    messageBoutonGoogle : String
+  },
+  watch: {
+    messageBoutonGoogle() {
+      this.messageLoginGoogle = this.messageBoutonGoogle;
+    }
   },
   methods : {
     requestGoogleAuth() {
       signInWithPopup(auth, provider)
           .then((result) => {
-            this.messageLoginGoogle = 'Connecté en tant que ' + result.user.displayName
+            this.messageLoginGoogle = 'Connecté en tant que ' + result.user.displayName + ' (Cliquer pour se déconnecter)'
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = provider.credentialFromResult(result);
             const token = credential.accessToken;
@@ -23,18 +29,17 @@ export default {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
         // The AuthCredential type that was used.
-        const credential = provider.credentialFromError(error);
+        // const credential = provider.credentialFromError(error);
       });
     },
     requestGoogleLogOut(){
       signOut(auth);
+      this.messageLoginGoogle = 'Se connecter avec Google';
     }
   }
 }
 </script>
 <template>
-  <span id="loginGoogle" class="button" @click="requestGoogleAuth()">{{ messageLoginGoogle }}</span>
+  <span id="loginGoogle" class="button" @click="messageLoginGoogle === 'Se connecter avec Google' ? requestGoogleAuth() : requestGoogleLogOut()">{{ messageLoginGoogle }}</span>
 </template>

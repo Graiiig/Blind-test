@@ -6,7 +6,7 @@ import Modal from '../components/Modal.vue'
 </script>
 
 <script>
-import {db, ref, set, push, onChildChanged, onValue, remove} from '../assets/js/firebase.js';
+import {db, ref, set, push, onChildChanged, onValue, remove, auth} from '../assets/js/firebase.js';
 
 export default {
   data() {
@@ -20,7 +20,8 @@ export default {
       version : import.meta.env.VITE_VERSION,
       spotifyToken : '',
       blur : "filter : blur(0px);",
-      nextTrack : 0
+      nextTrack : 0,
+      messageBoutonGoogle : ''
     }
   },
   methods: {
@@ -52,6 +53,13 @@ export default {
       // On cache le menu d'ajout d'un nouvel utilisateur
       this.showMenuAddPlayer = false;
     },
+    getUsers() {
+      // Récupération des users en BDD à la création du component
+      let userDb = ref(db, import.meta.env.VITE_FIREBASE_DB_USERS);
+      onValue(userDb, (data) => {
+        this.users = data.val();
+      });
+    },
     // Suppression d'un utilisateur dans la BDD
     removeUser(idFb){
       remove(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS+'/'+idFb));
@@ -80,18 +88,26 @@ export default {
     }
   },
   created(){
-    // Récupération des users en BDD à la création du component
-    let userDb = ref(db, import.meta.env.VITE_FIREBASE_DB_USERS);
-    onValue(userDb, (data) => {
-      this.users = data.val();
-    });
-
     // Récupère l'utilisateur depuis la BDD quand celui-ci clique sur le buzzer
     let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
     onChildChanged(clickerDb, (data) => {
       if (this.isMusicPlaying) {
         this.clicker = data.val();
         this.blur = "filter : blur(60px);";
+      }
+    });
+
+    let vm = this;
+    auth.onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+        vm.messageBoutonGoogle = 'Connecté en tant que ' + user.displayName + ' (Cliquer pour se déconnecter)';
+        // Récupération des users en BDD à la connexion Google
+        vm.getUsers();
+      } else {
+        // No user is signed in.
+        vm.messageBoutonGoogle = 'Se connecter avec Google';
+        vm.users = {};
       }
     });
     // Fonctionnel - Commenté pour l'instant car coùte des calls API (50 gratuits par heure)
@@ -114,7 +130,7 @@ export default {
 <template>
   <main class="flex space-around" :style="blur">
     <PlayersList :spotifyToken="spotifyToken" :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
-    <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack"/>
+    <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack" :message-bouton-google="messageBoutonGoogle"/>
   </main>
   <AddPlayer :showMenuAddPlayer="showMenuAddPlayer" @add-user="addUser"/>
   <Modal :isMusicPlaying="isMusicPlaying" :clicker="clicker" @reset-blur-and-winner="resetBlurAndWinner"/>

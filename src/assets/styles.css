@@ -51,7 +51,7 @@ body, html {
 
 #loginSpotify{
     float: right;
-    margin-top: 3%;
+    margin-top: 10%;
     width: 30vh;
 }
 
@@ -121,6 +121,14 @@ body, html {
     align-content: center;
 }
 
+.boutonsLogin {
+    width: 15%;
+}
+
+#loginGoogle{
+    margin-top: 10%;
+}
+
 /* Media queries pour les téléphones */
 @media only screen and (max-width: 600px) {
 
@@ -168,5 +176,9 @@ body, html {
 
     #username, #buzzer, #addUser{
         width: 70vw;
+    }
+
+    .boutonsLogin{
+        width: 100%;
     }
 }

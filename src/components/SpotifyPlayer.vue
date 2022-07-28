@@ -17,7 +17,8 @@ export default {
   props : {
     isMusicPlaying : Boolean,
     clicker : String,
-    setNextTrack : Number
+    setNextTrack : Number,
+    messageBoutonGoogle : String
   },
   watch : {
     clicker(val) {
@@ -150,9 +151,9 @@ export default {
       <br>
     </div>
   </div>
-  <div class="flex" style="flex-direction: column">
+  <div class="flex boutonsLogin" style="flex-direction: column; align-items: center;">
 
   <span id="loginSpotify" class="button" @click="requestSpotifyAuth()">{{messageSpotify}}</span>
-  <GoogleLogin/>
+  <GoogleLogin :message-bouton-google="messageBoutonGoogle"/>
   </div>
 </template>
