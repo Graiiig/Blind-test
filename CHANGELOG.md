@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## 1.0.2 (En cours)
+
+- Ajout de Three.js
+
 ## 1.0.1 (2022-07-28)
 
 - Gestion des points
