@@ -1,6 +1,6 @@
 import {getDatabase, ref, set, push, onChildChanged, onValue, remove, query, orderByChild } from 'firebase/database'
 import {initializeApp} from 'firebase/app'
-import {getAuth, signInWithPopup, signOut, GoogleAuthProvider} from "firebase/auth";
+import {getAuth, signInWithPopup, signOut, GoogleAuthProvider, signInAnonymously} from "firebase/auth";
 
 
 // Récupération de la config Firebase depuis .env
@@ -23,4 +23,5 @@ const auth = getAuth();
 // Initilisation de la BDD
 const db = getDatabase();
 
-export {db, ref, set, push, onChildChanged, onValue, remove, query, orderByChild, auth, provider, signInWithPopup, signOut}
+export {db, ref, set, push, onChildChanged, onValue, remove, query, orderByChild, auth, provider, signInWithPopup, signOut,
+    signInAnonymously}

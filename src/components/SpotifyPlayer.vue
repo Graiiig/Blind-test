@@ -11,14 +11,21 @@ export default {
       imgLink: 'https://picsum.photos/400',
       messageSpotify: 'Se connecter à Spotify',
       playerName: 'Blind test by Graig',
-      spotifyToken : ''
+      spotifyToken : '',
+      count: 30,
+      playStatus : '',
+      artistFound : false,
+      titleFound : false,
+      artist : '',
+      title : ''
     }
   },
   props : {
     isMusicPlaying : Boolean,
     clicker : String,
     setNextTrack : Number,
-    messageBoutonGoogle : String
+    messageBoutonGoogle : String,
+    found : String
   },
   watch : {
     clicker(val) {
@@ -32,6 +39,21 @@ export default {
     },
     setNextTrack(){
       this.nextTrackPlayer();
+    },
+    found(val){
+      if (val === 'artist'){
+        this.artistFound = true;
+      }
+      else if (val === 'title'){
+        this.titleFound = true;
+      }
+      else {
+        this.artistFound = true;
+        this.titleFound = true;
+      }
+      if (this.titleFound && this.artistFound) {
+        this.nextTrackPlayer();
+      }
     }
   },
   methods: {
@@ -44,7 +66,10 @@ export default {
     });
     },
     nextTrackPlayer(){
-      player.nextTrack()
+      player.nextTrack();
+      this.count = 30;
+      this.artistFound = false;
+      this.titleFound = false;
     },
     previousTrackPlayer(){
       player.previousTrack()
@@ -60,6 +85,18 @@ export default {
       url += '&show_dialog=true';
       window.location.href = url;
     },
+    createDecompte(){
+      let vm = this;
+      let interval = setInterval(function () {
+        console.log(vm.count)
+        if (vm.isMusicPlaying && vm.count > 0) {
+          vm.count--;
+        }
+        else if (vm.count === 0){
+          vm.nextTrackPlayer();
+        }
+      }, 1000)
+    }
   },
   created() {
     // Initie la création du player spotify
@@ -118,6 +155,8 @@ export default {
         console.log('Duration of Song', duration);
         console.log("image", current_track.album.images[2].url)
         this.currentPlaying = current_track.name;
+        this.artist = current_track.artists[0].name;
+        this.title = current_track.name;
         this.messageSpotify = 'Appli Spotify connectée !';
         this.imgLink = current_track.album.images[2].url;
       });
@@ -129,6 +168,8 @@ export default {
     let spotify = document.createElement('script')
     spotify.setAttribute('src', 'https://sdk.scdn.co/spotify-player.js')
     document.head.appendChild(spotify)
+
+    this.createDecompte()
   },
 }
 </script>
@@ -146,7 +187,12 @@ export default {
         <br>
         <br>
         <br>
-        <span>Musique en cours : {{currentPlaying}}</span>
+        <br>
+        <span>Artiste : <span>{{ artistFound ? artist : 'non trouvé'}}</span></span>
+        <br>
+        <span>Titre : <span>{{ titleFound ? title : 'non trouvé' }}</span></span>
+        <br>
+        <span>Décompte : {{ count }}</span>
       </div>
       <br>
     </div>

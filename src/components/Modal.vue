@@ -49,9 +49,9 @@ export default {
     <p style="font-size: 2vw; text-align: center">{{clicker}} a buzzé !!</p>
 
     <div style="display: flex; justify-content: space-around; margin-top: 3vh">
-      <div class="button" @click="addPointsToUser(1); open = false; $emit('resetBlurAndWinner', false)" ><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste</div>
-      <div class="button" @click="addPointsToUser(1); open = false; $emit('resetBlurAndWinner', false)" ><font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre</div>
-      <div class="button" @click="addPointsToUser(3); open = false; $emit('resetBlurAndWinner', true)" ><font-awesome-icon icon="fa-solid fa-music"/> Artiste et Titre</div>
+      <div class="button" @click="addPointsToUser(1); open = false; $emit('resetBlurAndWinner', false, 'artist')" ><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste</div>
+      <div class="button" @click="addPointsToUser(1); open = false; $emit('resetBlurAndWinner', false, 'title')" ><font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre</div>
+      <div class="button" @click="addPointsToUser(3); open = false; $emit('resetBlurAndWinner', true, 'both')" ><font-awesome-icon icon="fa-solid fa-music"/> Artiste et Titre</div>
     </div>
   </div>
 </template>

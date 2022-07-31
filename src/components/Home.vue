@@ -21,7 +21,8 @@ export default {
       spotifyToken : '',
       blur : "filter : blur(0px);",
       nextTrack : 0,
-      messageBoutonGoogle : ''
+      messageBoutonGoogle : '',
+      found : ''
     }
   },
   methods: {
@@ -71,7 +72,8 @@ export default {
       this.isMusicPlaying = dataSpotifyPlayer.isMusicPlaying;
       this.spotifyToken = dataSpotifyPlayer.spotifyToken;
     },
-    resetBlurAndWinner(nextTrack){
+    resetBlurAndWinner(nextTrack, type){
+      this.found = type;
       this.blur = "filter : blur(0px);";
 
       // Si la personne a trouvé artiste + titre, on passe à la musique suivante
@@ -130,7 +132,7 @@ export default {
 <template>
   <main class="flex space-around" :style="blur">
     <PlayersList :spotifyToken="spotifyToken" :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
-    <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack" :message-bouton-google="messageBoutonGoogle"/>
+    <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack" :message-bouton-google="messageBoutonGoogle" :found="found"/>
   </main>
   <AddPlayer :showMenuAddPlayer="showMenuAddPlayer" @add-user="addUser"/>
   <Modal :isMusicPlaying="isMusicPlaying" :clicker="clicker" @reset-blur-and-winner="resetBlurAndWinner"/>

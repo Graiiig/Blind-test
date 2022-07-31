@@ -1,5 +1,5 @@
 <script>
-import {auth, provider, signInWithPopup, signOut} from '../assets/js/firebase.js';
+import {auth, provider, signInWithPopup, signOut, signInAnonymously} from '../assets/js/firebase.js';
 export default {
   data() {
     return {
@@ -14,9 +14,13 @@ export default {
       this.messageLoginGoogle = this.messageBoutonGoogle;
     }
   },
+  mounted() {
+    // Connecte automatiquement anonymement un utilisateur
+    this.requestGoogleAuth();
+  },
   methods : {
     requestGoogleAuth() {
-      signInWithPopup(auth, provider)
+      signInAnonymously(auth)
           .then((result) => {
             this.messageLoginGoogle = 'Connecté en tant que ' + result.user.displayName + ' (Cliquer pour se déconnecter)'
             // This gives you a Google Access Token. You can use it to access the Google API.
