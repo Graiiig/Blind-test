@@ -7,6 +7,132 @@ import Modal from '../components/Modal.vue'
 
 <script>
 import {db, ref, set, push, onChildChanged, onValue, remove, auth} from '../assets/js/firebase.js';
+import * as THREE from 'three';
+
+import { BufferGeometryUtils } from 'https://unpkg.com/three@0.126.0/examples/jsm/utils/BufferGeometryUtils.js';
+import { gsap } from 'gsap';
+
+import { OrbitControls } from 'https://unpkg.com/three@0.126.0/examples/jsm/controls/OrbitControls.js';
+// Création de la scène et de la caméra
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+// const renderer = new THREE.WebGLRenderer( { alpha: true });
+// renderer.setSize( 250, 250 );
+// const surfaceCanvas = document.querySelector('#surface');
+window.addEventListener("DOMContentLoaded", (event) => {
+  console.log("DOM entièrement chargé et analysé");
+// document.querySelector('.testThree').appendChild( renderer.domElement );
+
+
+  let surface = new Surface();
+
+  new THREE.TextureLoader().load(
+      'https://assets.codepen.io/959327/matcap-crystal.png',
+      (matcapTexture) => {
+        surface.createObjects(matcapTexture);
+        surface.startLoop(surface);
+      });
+
+
+});
+
+class Surface {
+
+  constructor() {
+    this.scene = new THREE.Scene();
+
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    this.camera.position.set(0, 0, 25);
+    this.renderer = new THREE.WebGLRenderer({alpha : true, canvas: document.querySelector('#surface')});
+    this.renderer.setSize(600, 300)
+    this.createOrbitControls();
+  }
+
+  createOrbitControls() {
+    this.controls = new OrbitControls(this.camera, document.querySelector('#surface'));
+    this.controls.enablePan = true;
+    this.controls.enabled = false;
+    this.controls.enableZoom = false;
+    this.controls.enableDamping = true;
+    this.controls.minPolarAngle = .35 * Math.PI;
+    this.controls.maxPolarAngle = .65 * Math.PI;
+    this.controls.autoRotate = true;
+  }
+
+  createObjects(matcapTexture) {
+
+    this.dummy = new THREE.Object3D();
+
+    const ballInnerMaterial = new THREE.MeshBasicMaterial({ color: 0x222222 });
+    const mirrorMaterial = new THREE.MeshMatcapMaterial({ side: THREE.BackSide });
+    mirrorMaterial.matcap = matcapTexture;
+
+    const numberOfBalls = 1;
+    this.balls = [];
+
+    for (let i = 0; i < numberOfBalls; i++) {
+      this.balls[i] = this.createBall(7 + Math.random(), ballInnerMaterial, mirrorMaterial);
+      this.balls[i].position.set(
+          0,
+          0,
+          0,
+      );
+      this.scene.add(this.balls[i]);
+    }
+  }
+
+  createBall(radius, innerSphereMaterial, planeMaterial) {
+    const ballInnerGeometry = new THREE.SphereBufferGeometry(radius, 9, 9);
+
+    let isoGeometry = new THREE.IcosahedronBufferGeometry(radius, 3);
+    isoGeometry.deleteAttribute('normal');
+    isoGeometry.deleteAttribute('uv');
+    isoGeometry = BufferGeometryUtils.mergeVertices(isoGeometry);
+    const mirrorGeometry = new THREE.PlaneBufferGeometry(.23 * radius, .23 * radius, 1, 1);
+
+    let isoVertices = isoGeometry.attributes.position.array;
+    let instancedMirrorMesh = new THREE.InstancedMesh(
+        mirrorGeometry,
+        planeMaterial,
+        isoGeometry.attributes.position.count
+    );
+    for (let i = 0; i < isoVertices.length; i += 3) {
+      this.dummy.position.set(isoVertices[i], isoVertices[i + 1], isoVertices[i + 2]);
+      this.dummy.lookAt(0, 0, 0);
+      this.dummy.updateMatrix();
+      instancedMirrorMesh.setMatrixAt(i / 3, this.dummy.matrix);
+    }
+
+    const group = new THREE.Group();
+    group.add(new THREE.Mesh(
+        ballInnerGeometry,
+        innerSphereMaterial
+    ));
+    group.add(instancedMirrorMesh);
+    return group;
+  }
+
+  startLoop(surface) {
+    surface.balls.forEach((b, bIdx) => {
+      gsap.timeline({
+        repeat: -1,
+        onUpdate: () => {
+          if (bIdx === 0) {
+            surface.controls.update();
+            surface.renderer.render(surface.scene, surface.camera);
+          }
+        }
+      })
+          .to(b.rotation, {
+            duration: 4 + Math.random() * 4,
+            y: Math.random() > .5 ? -2 * Math.PI: 2 * Math.PI,
+            // y: Math.random() > .5 ? -2 * Math.PI: 2 * Math.PI,
+            ease: 'none'
+          })
+    })
+  }
+}
 
 export default {
   data() {
@@ -128,6 +254,8 @@ export default {
 </script>
 
 <template>
+  <canvas id="surface" style="position: absolute;  top : 400px"></canvas>
+
   <main class="flex space-around" :style="blur">
     <PlayersList :spotifyToken="spotifyToken" :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
     <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack" :message-bouton-google="messageBoutonGoogle"/>
