@@ -1,5 +1,6 @@
 <script setup>
-  import GoogleLogin from './GoogleLogin.vue'
+  import GoogleLogin from './GoogleLogin.vue';
+  const emits = defineEmits(["setMusicPlayerStatus"])
 </script>
 <script>
 let player;
@@ -52,6 +53,7 @@ export default {
         this.titleFound = true;
       }
       if (this.titleFound && this.artistFound) {
+        // TODO : Passer à la prochaine chanson ne fonctionne pas
         this.nextTrackPlayer();
       }
     }
@@ -88,7 +90,6 @@ export default {
     createDecompte(){
       let vm = this;
       let interval = setInterval(function () {
-        console.log(vm.count)
         if (vm.isMusicPlaying && vm.count > 0) {
           vm.count--;
         }

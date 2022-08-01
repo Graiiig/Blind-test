@@ -1,3 +1,6 @@
+<script setup>
+const emits = defineEmits(["removeUser"])
+</script>
 <script>
 
 export default {

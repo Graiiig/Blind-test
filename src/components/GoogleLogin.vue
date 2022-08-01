@@ -45,5 +45,5 @@ export default {
 }
 </script>
 <template>
-  <span id="loginGoogle" class="button" @click="messageLoginGoogle === 'Se connecter avec Google' ? requestGoogleAuth() : requestGoogleLogOut()">{{ messageLoginGoogle }}</span>
+<!--  <span id="loginGoogle" class="button" @click="messageLoginGoogle === 'Se connecter avec Google' ? requestGoogleAuth() : requestGoogleLogOut()">{{ messageLoginGoogle }}</span>-->
 </template>
