@@ -172,6 +172,9 @@ export default {
 <template>
   <div id="musicCard" class="borderColored">
     <span class="musicPlayingIcon" :style="this.$store.getters.getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="this.$store.state.isMusicPlaying" /></span>
+    <span class="" style="float: left;margin-top: 2%;
+    margin-left: 4%;
+    font-size: 4vw;" :style="this.$store.getters.getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'">{{this.$store.getters.getCount}}</span>
     <br>
     <div class="space-around flex imgMusicCard">
       <img class="imgMusic" :src="imgLink" alt="image album">
@@ -183,12 +186,10 @@ export default {
         <br>
         <br>
         <br>
-        <span><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ this.$store.getters.getArtist ? artist : 'non trouvé' }}</span> -
-        <span> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{
-            this.$store.getters.getTitle ? title : 'non trouvé'
-          }}</span>
+        <span><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ this.$store.getters.getArtist ? artist : 'non trouvé' }}</span>
         <br>
-        <span>Décompte : {{this.getCount}}</span>
+        <span> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{this.$store.getters.getTitle ? title : 'non trouvé'}}</span>
+        <br>
         <br>
       </div>
       <br>
