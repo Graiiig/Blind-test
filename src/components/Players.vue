@@ -16,8 +16,7 @@ export default {
         name: "Buzzer",
         params: {
           points: userParsed.points,
-          username : userParsed.username,
-          spotifyToken : this.spotifyToken
+          username : userParsed.username
         },
       });
     },

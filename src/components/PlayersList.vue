@@ -2,6 +2,7 @@
   import Players from "./Players.vue";
 </script>
 <script>
+
 export default {
   data() {
     return {
@@ -14,13 +15,16 @@ export default {
   methods : {
     removeUser(idFb){
       this.$emit('removeUser', idFb)
-    }
+    },
+    showMenuAddPlayerFunction() {
+      this.$store.state.showMenuAddPlayer = !this.$store.showMenuAddPlayer;
+    },
   }
 }
 </script>
 <template>
   <div class="borderColored playersList">
-    <h3 >Joueurs : <span style="cursor: pointer" @click="$emit('showMenuAddPlayer')"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
+    <h3 >Joueurs : <span style="cursor: pointer" @click="showMenuAddPlayerFunction"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
     <Players :spotifyToken="spotifyToken" :users="users" @remove-user="removeUser"/>
   </div>
 </template>

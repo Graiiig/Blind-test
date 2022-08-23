@@ -6,21 +6,16 @@ import Modal from '../components/Modal.vue'
 </script>
 
 <script>
-import {db, ref, set, push, onChildChanged, onValue, remove, auth} from '../assets/js/firebase.js';
+import {db, ref, set, push, onChildChanged, onValue, remove, auth} from '@/assets/js/firebase';
 
 export default {
   data() {
     return {
-      clicker: '',
       users: {},
       imgLink : 'https://picsum.photos/400',
       playerName : 'Blind test by Graig',
-      showMenuAddPlayer : false,
-      isMusicPlaying :false,
       version : import.meta.env.VITE_VERSION,
       spotifyToken : '',
-      blur : "filter : blur(0px);",
-      nextTrack : 0,
       messageBoutonGoogle : ''
     }
   },
@@ -51,7 +46,7 @@ export default {
       }).key;
 
       // On cache le menu d'ajout d'un nouvel utilisateur
-      this.showMenuAddPlayer = false;
+      this.$store.state.showMenuAddPlayer = false;
     },
     getUsers() {
       // Récupération des users en BDD à la création du component
@@ -64,36 +59,13 @@ export default {
     removeUser(idFb){
       remove(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS+'/'+idFb));
     },
-    showMenuAddPlayerFunction() {
-      this.showMenuAddPlayer = !this.showMenuAddPlayer;
-    },
-    setMusicStatusPlayer(dataSpotifyPlayer){
-      this.isMusicPlaying = dataSpotifyPlayer.isMusicPlaying;
-      this.spotifyToken = dataSpotifyPlayer.spotifyToken;
-    },
-    resetBlurAndWinner(nextTrack){
-      this.blur = "filter : blur(0px);";
-
-      // Si la personne a trouvé artiste + titre, on passe à la musique suivante
-      if (nextTrack){
-        this.isMusicPlaying = true;
-        let today= new Date();
-        this.nextTrack = today.getTime()
-      }
-      // Sinon on reset juste le dernier clicker
-      else {
-        this.clicker = '';
-        this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_CLICKER, {'nom' : ''})
-      }
-    }
   },
   created(){
     // Récupère l'utilisateur depuis la BDD quand celui-ci clique sur le buzzer
     let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
     onChildChanged(clickerDb, (data) => {
-      if (this.isMusicPlaying) {
-        this.clicker = data.val();
-        this.blur = "filter : blur(60px);";
+      if (this.$store.state.isMusicPlaying) {
+        this.$store.commit('setClicker', data.val());
       }
     });
 
@@ -110,7 +82,7 @@ export default {
         vm.users = {};
       }
     });
-    // Fonctionnel - Commenté pour l'instant car coùte des calls API (50 gratuits par heure)
+    // Fonctionnel - Commenté pour l'instant car coûte des calls API (50 gratuits par heure)
     // Choisit une image sur le thème de la musique au hasard dans la base de données unsplash
     // Et la met en fond d'écran de l'app
     // let url = 'https://api.unsplash.com/photos/random?client_id=' + import.meta.env.VITE_UNSPLASH_CLIENT_ID + '&query=music&orientation=landscape'
@@ -121,18 +93,23 @@ export default {
     //     .then(data => {
     //         document.querySelector('#app').style.backgroundImage = "url(" + data.urls.full + ")";
     //     })
-    document.querySelector('#app').style.backgroundImage = "url('https://images.unsplash.com/photo-1466428996289-fb355538da1b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNDg3OTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg1OTQ2OTU&ixlib=rb-1.2.1&q=80')";
+    // document.querySelector('#app').style.backgroundImage = "url('https://images.unsplash.com/photo-1466428996289-fb355538da1b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNDg3OTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg1OTQ2OTU&ixlib=rb-1.2.1&q=80')";
     // document.querySelector('#app').style.backgroundImage = "url('https://images.unsplash.com/photo-1501612780327-45045538702b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNDg3OTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg1OTQ2Mzc&ixlib=rb-1.2.1&q=80')";
+  },
+  computed:{
+    getBlur(){
+      return "filter : blur("+this.$store.state.blur+"px);"
+    }
   }
 }
 </script>
 
 <template>
-  <main class="flex space-around" :style="blur">
-    <PlayersList :spotifyToken="spotifyToken" :users="users" @show-menu-add-player="showMenuAddPlayerFunction" @remove-user="removeUser"/>
-    <SpotifyPlayer @set-music-player-status="setMusicStatusPlayer" :isMusicPlaying="isMusicPlaying" :clicker="clicker" :setNextTrack="nextTrack" :message-bouton-google="messageBoutonGoogle"/>
+  <main class="flex space-around" :style="getBlur">
+    <PlayersList :spotifyToken="spotifyToken" :users="users" @remove-user="removeUser"/>
+    <SpotifyPlayer :message-bouton-google="messageBoutonGoogle"/>
   </main>
-  <AddPlayer :showMenuAddPlayer="showMenuAddPlayer" @add-user="addUser"/>
-  <Modal :isMusicPlaying="isMusicPlaying" :clicker="clicker" @reset-blur-and-winner="resetBlurAndWinner"/>
+  <AddPlayer @add-user="addUser"/>
+  <Modal/>
 </template>
 
