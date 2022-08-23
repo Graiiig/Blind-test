@@ -1,6 +1,3 @@
-<script setup>
-  import GoogleLogin from './GoogleLogin.vue'
-</script>
 <script>
 import {db, ref, set} from "@/assets/js/firebase";
 
@@ -37,6 +34,9 @@ export default {
       if(isGoNextTrack){
         this.$store.commit('setCount', 10);
       }
+    },
+    'getRequestSpotifyAuth'(isRequestSpotifyAuth){
+      this.requestSpotifyAuth();
     }
   },
   methods: {
@@ -165,6 +165,9 @@ export default {
     },
     getCount() {
       return this.$store.getters.getCount;
+    },
+    getRequestSpotifyAuth() {
+      return this.$store.getters.getRequestSpotifyAuth;
     }
   }
 }
@@ -195,9 +198,9 @@ export default {
       <br>
     </div>
   </div>
-  <div class="flex boutonsLogin" style="flex-direction: column; align-items: center;">
+<!--  <div class="flex boutonsLogin" style="flex-direction: column; align-items: center;">-->
 
-  <span id="loginSpotify" class="button" @click="requestSpotifyAuth()">{{messageSpotify}}</span>
-  <GoogleLogin :message-bouton-google="messageBoutonGoogle"/>
-  </div>
+<!--  <span id="loginSpotify" class="button" @click="requestSpotifyAuth()">{{messageSpotify}}</span>-->
+<!--  <GoogleLogin :message-bouton-google="messageBoutonGoogle"/>-->
+<!--  </div>-->
 </template>

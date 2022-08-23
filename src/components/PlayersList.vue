@@ -8,23 +8,19 @@ export default {
     return {
     }
   },
-  props : {
-    users : Object,
-    spotifyToken : String
-  },
   methods : {
     removeUser(idFb){
       this.$emit('removeUser', idFb)
     },
     showMenuAddPlayerFunction() {
-      this.$store.state.showMenuAddPlayer = !this.$store.showMenuAddPlayer;
+      this.$store.state.showMenuAddPlayer = !this.$store.state.showMenuAddPlayer;
     },
   }
 }
 </script>
 <template>
-  <div class="borderColored playersList">
+  <div class="playersList">
     <h3 >Joueurs : <span style="cursor: pointer" @click="showMenuAddPlayerFunction"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
-    <Players :spotifyToken="spotifyToken" :users="users" @remove-user="removeUser"/>
+    <Players @remove-user="removeUser"/>
   </div>
 </template>

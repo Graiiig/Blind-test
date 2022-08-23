@@ -5,10 +5,6 @@ export default {
     return {
     }
   },
-  props : {
-    users : Object,
-    spotifyToken : String
-  },
   methods : {
     goToBuzzer(user){
       let userParsed = JSON.parse(JSON.stringify(user));
@@ -24,7 +20,7 @@ export default {
 }
 </script>
 <template>
-  <div v-for="(user, key) in users">
+  <div v-for="(user, key) in this.$store.getters.getUsers">
     <div style="display: flex;align-items: center;">
       <img style="width:50px" :src="user.profilePicture" alt="Image de profile d'un utilisateur"/>
       <span style="margin-left: 1%"  @click="goToBuzzer(user)">{{ user.username }} ({{user.points}} points)</span>

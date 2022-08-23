@@ -1,7 +1,6 @@
 <script setup>
 import SpotifyPlayer from '../components/SpotifyPlayer.vue'
-import PlayersList from '../components/PlayersList.vue'
-import AddPlayer from '../components/AddPlayer.vue'
+import AppParameters from '../components/AppParameters.vue'
 import Modal from '../components/Modal.vue'
 </script>
 
@@ -105,11 +104,12 @@ export default {
 </script>
 
 <template>
-  <main class="flex space-around" :style="getBlur">
-    <PlayersList :spotifyToken="spotifyToken" :users="users" @remove-user="removeUser"/>
+  <main class="flex" :style="getBlur">
+    <AppParameters @request-spotify-auth=""/>
+<!--    <PlayersList :spotifyToken="spotifyToken" :users="users" @remove-user="removeUser"/>-->
     <SpotifyPlayer :message-bouton-google="messageBoutonGoogle"/>
   </main>
-  <AddPlayer @add-user="addUser"/>
+<!--  <AddPlayer @add-user="addUser"/>-->
   <Modal/>
 </template>
 

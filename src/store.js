@@ -37,13 +37,18 @@ const store = createStore({
             artist: false,
             spotifyDeviceId : '',
             responseTest : '',
-            count : 40
+            count : 40,
+            users : {},
+            requestSpotifyAuth : 0
         }
     }
     ,
     mutations:{
         setSpotifyToken(state, token){
             state.spotifyToken = token;
+        },
+        setUsers(state, users) {
+            state.users = users;
         },
         setSpotifyDeviceId(state, deviceId) {
             state.spotifyDeviceId = deviceId;
@@ -71,7 +76,10 @@ const store = createStore({
         },
         decrementCount(state){
             state.count -= 1;
-        }
+        },
+        setRequestSpotifyAuth(state, resquestSpotifyAuth) {
+            state.requestSpotifyAuth = resquestSpotifyAuth;
+        },
     },
     getters: {
         getClicker(state){
@@ -88,6 +96,12 @@ const store = createStore({
         },
         getCount(state) {
             return state.count;
+        },
+        getUsers(state) {
+            return state.users;
+        },
+        getRequestSpotifyAuth(state) {
+            return state.requestSpotifyAuth;
         },
     },
     actions:{

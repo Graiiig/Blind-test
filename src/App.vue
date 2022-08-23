@@ -16,6 +16,7 @@ export default {
       let dataFromDb = data.val();
       this.$store.commit('setIsMusicPlaying', dataFromDb.appSettings.isMusicPlaying)
       this.$store.commit('setClicker', dataFromDb.clicker.nom)
+      this.$store.commit('setUsers', dataFromDb.users)
     });
   }
 }
