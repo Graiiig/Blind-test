@@ -43,6 +43,11 @@ body, html {
     cursor: pointer;
 }
 
+.button-disabled{
+    background-color: #69c40b;
+    pointer-events: none;
+}
+
 .row{
     text-align: center;
     width: 100%;
@@ -80,7 +85,7 @@ body, html {
 }
 
 .buzzer {
-    box-shadow: 3px 4px 0px 0px #8a2a21;
+    box-shadow: 3px 4px 0 0 #8a2a21;
     background: #c62d1f linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
     border-radius:42px;
     border:1px solid #d02718;

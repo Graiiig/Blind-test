@@ -50,11 +50,12 @@ export default {
 <template>
   <div v-if="this.$store.state.showModal" class="modal borderColored">
     <span style="font-size: 2vw; cursor: pointer" @click="this.$store.dispatch('changeModalStatus', {isShowModal : false, blur: 0, isMusicPlaying : true})"><font-awesome-icon icon="fa-solid fa-circle-xmark" /></span>
-    <p style="font-size: 2vw; text-align: center">{{this.$store.state.clicker}} a buzzé !!</p>
+    <p style="font-size: 2vw; text-align: center">{{this.$store.getters.getClicker}} a buzzé !!</p>
 
     <div style="display: flex; justify-content: space-around; margin-top: 3vh">
-      <div class="button" @click="addPointsToUser(1); this.$store.commit('setArtist', true)" ><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste</div>
-      <div class="button" @click="addPointsToUser(1); this.$store.commit('setTitle', true)" ><font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre</div>
+      <div :class="this.$store.getters.getArtist ? 'button-disabled button' : 'button'" @click="addPointsToUser(1); this.$store.commit('setArtist', true)" ><font-awesome-icon icon="fa-solid fa-microphone-lines"/> {{ this.$store.getters.getArtist ? 'Artiste trouvé' : 'Artiste'}}</div>
+      <div :class="this.$store.getters.getTitle ? 'button-disabled button' : 'button'" @click="addPointsToUser(1); this.$store.commit('setTitle', true)" ><font-awesome-icon icon="fa-solid fa-compact-disc"/>
+        {{ this.$store.getters.getTitle ? 'Titre trouvé' : 'Titre'}}</div>
       <div class="button" @click="addPointsToUser(3); this.$store.commit('setTitle', true); this.$store.commit('setArtist', true)" ><font-awesome-icon icon="fa-solid fa-music"/> Artiste et Titre</div>
     </div>
   </div>
