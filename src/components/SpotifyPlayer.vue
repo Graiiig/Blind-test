@@ -9,7 +9,8 @@ let player;
 export default {
   data() {
     return {
-      currentPlaying: 'Pas d\'écoute en cours',
+      title: 'Pas d\'écoute en cours',
+      artist : 'Pas d\'écoute en cours',
       imgLink: 'https://picsum.photos/400',
       messageSpotify: 'Se connecter à Spotify',
       spotifyPlayerName: 'Blind test by Graig',
@@ -131,7 +132,8 @@ export default {
         console.log('Position in Song', position);
         console.log('Duration of Song', duration);
         console.log("image", current_track.album.images[2].url)
-        this.currentPlaying = current_track.name;
+        this.title = current_track.name;
+        this.artist = current_track.artists[0].name;
         this.messageSpotify = 'Appli Spotify connectée !';
         this.imgLink = current_track.album.images[2].url;
       });
@@ -164,13 +166,12 @@ export default {
     getCount() {
       return this.$store.getters.getCount;
     }
-
   }
 }
 </script>
 <template>
   <div id="musicCard" class="borderColored">
-    <span class="musicPlayingIcon" :style="this.$store.state.isMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="this.$store.state.isMusicPlaying" /></span>
+    <span class="musicPlayingIcon" :style="this.$store.getters.getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="this.$store.state.isMusicPlaying" /></span>
     <br>
     <div class="space-around flex imgMusicCard">
       <img class="imgMusic" :src="imgLink" alt="image album">
@@ -182,7 +183,10 @@ export default {
         <br>
         <br>
         <br>
-        <span>Musique en cours : {{currentPlaying}}</span>
+        <span><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ this.$store.getters.getArtist ? artist : 'non trouvé' }}</span> -
+        <span> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{
+            this.$store.getters.getTitle ? title : 'non trouvé'
+          }}</span>
         <br>
         <span>Décompte : {{this.getCount}}</span>
         <br>
