@@ -1,5 +1,5 @@
 <script>
-import {auth, provider, signInWithPopup, signOut} from '../assets/js/firebase.js';
+import {auth, provider, signInWithPopup, signOut} from '@/assets/js/firebase';
 export default {
   data() {
     return {
@@ -20,15 +20,15 @@ export default {
           .then((result) => {
             this.messageLoginGoogle = 'Connecté en tant que ' + result.user.displayName + ' (Cliquer pour se déconnecter)'
             // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = provider.credentialFromResult(result);
-            const token = credential.accessToken;
+            // const credential = provider.credentialFromResult(result);
+            // const token = credential.accessToken;
             // The signed-in user info.
-            const user = result.user;
+            // const user = result.user;
             // ...
-          }).catch((error) => {
+          // }).catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
         // The AuthCredential type that was used.
         // const credential = provider.credentialFromError(error);
       });
@@ -37,9 +37,14 @@ export default {
       signOut(auth);
       this.messageLoginGoogle = 'Se connecter avec Google';
     }
+  },
+  computed: {
+    isGoogleConnected(){
+      return this.messageLoginGoogle !== 'Se connecter avec Google';
+    }
   }
 }
 </script>
 <template>
-  <span id="loginGoogle" class="button" @click="messageLoginGoogle === 'Se connecter avec Google' ? requestGoogleAuth() : requestGoogleLogOut()">{{ messageLoginGoogle }}</span>
+  <span id="loginGoogle" class="button" :style="this.isGoogleConnected ? 'visibility : hidden' : 'visibility : visible'" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageLoginGoogle }}</span>
 </template>
