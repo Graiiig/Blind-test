@@ -21,6 +21,6 @@ export default {
 <template>
   <div class="playersList">
     <h3 >Joueurs : <span style="cursor: pointer" @click="showMenuAddPlayerFunction"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
-    <Players @remove-user="removeUser"/>
+    <Players/>
   </div>
 </template>

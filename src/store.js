@@ -14,6 +14,7 @@ const fetchPlus = (url, requestOptions = {}, retries, context) =>
                 context.commit('setTitle', false);
                 context.commit('setArtist', false)
                 context.commit('setCount', 40)
+                context.commit('setCountMax', 40)
                 return res
             }
             if (retries > 0) {
@@ -29,15 +30,17 @@ const store = createStore({
         return {
             isMusicPlaying: false,
             spotifyToken: '',
+            spotifyDeviceId : '',
+            spotifyMessage : 'Se connecter à Spotify',
             showMenuAddPlayer: false,
             clicker: '',
             showModal: false,
             blur: 0,
             title: false,
             artist: false,
-            spotifyDeviceId : '',
             responseTest : '',
             count : 40,
+            countMax : 40,
             users : {},
             requestSpotifyAuth : 0
         }
@@ -74,11 +77,17 @@ const store = createStore({
         setCount(state, numberOfSeconds) {
             state.count = numberOfSeconds;
         },
+        setCountMax(state, maxNumberOfSeconds) {
+            state.countMax = maxNumberOfSeconds;
+        },
         decrementCount(state){
             state.count -= 1;
         },
         setRequestSpotifyAuth(state, resquestSpotifyAuth) {
             state.requestSpotifyAuth = resquestSpotifyAuth;
+        },
+        setSpotifyMessage(state, spotifyMessage) {
+            state.spotifyMessage = spotifyMessage;
         },
     },
     getters: {
@@ -97,11 +106,17 @@ const store = createStore({
         getCount(state) {
             return state.count;
         },
+        getCountMax(state) {
+            return state.countMax;
+        },
         getUsers(state) {
             return state.users;
         },
         getRequestSpotifyAuth(state) {
             return state.requestSpotifyAuth;
+        },
+        getSpotifyMessage(state) {
+            return state.spotifyMessage;
         },
     },
     actions:{
@@ -128,6 +143,24 @@ const store = createStore({
             // On passe à la prochaine musique 10s après que l'artiste et le titre ont été trouvés
             setTimeout(function(){fetchPlus(url, requestOptions, 6, context)}, timeout);
 
+        },
+        // Permet de connecter automatiquement l'application à Spotify
+        transferSpotifyPlaybackToDevice(context){
+            let deviceId = context.state.spotifyDeviceId;
+            let token = context.state.spotifyToken;
+            let url = "https://api.spotify.com/v1/me/player";
+            let body = '{"device_ids":["'+deviceId+'"]}'
+
+            const requestOptions = {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body : body
+            };
+            fetchPlus(url, requestOptions, 6, context)
         }
     }
 })
