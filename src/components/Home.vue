@@ -2,7 +2,7 @@
 import SpotifyPlayer from '../components/SpotifyPlayer.vue'
 import Sidebar from './Sidebar.vue'
 import Modal from '../components/Modal.vue'
-// import PlayersQrCodes from "../components/PlayersQrCodes.vue";
+import PlayersQrCodes from "../components/PlayersQrCodes.vue";
 
 </script>
 
@@ -41,7 +41,7 @@ export default {
   <main class="flex" :style="getBlur">
     <Sidebar/>
     <SpotifyPlayer/>
-<!--    <PlayersQrCodes/>-->
+    <PlayersQrCodes/>
   </main>
   <Modal/>
 </template>
