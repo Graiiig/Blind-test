@@ -3,6 +3,8 @@
 ## 1.0.3 (2022-09-30)
 
 - Désactivation des boutons artiste/titre si déjà trouvé(s)
+- Refonte graphique
+- Utilisation de QrCode avec la [libraire suivante](https://github.com/scopewu/qrcode.vue)
 
 ## 1.0.2 (2022-08-23)
 
