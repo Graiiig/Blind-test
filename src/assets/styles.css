@@ -15,6 +15,22 @@
     /*margin-top: 2%;*/
 }
 
+.pointer{
+    cursor: pointer;
+}
+
+.qrcodeMenu{
+    position: fixed;
+    z-index: 999;
+    top: 10vh;
+    left: 10vw;
+    width: 80%;
+    height: 80vh;
+    padding: 2vh;
+    flex-direction: column;
+    background-color: #111436;
+}
+
 .imgMusic{
     filter: blur(1rem);
     width: 45vh

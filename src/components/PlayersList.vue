@@ -4,23 +4,19 @@
 <script>
 
 export default {
-  data() {
-    return {
-    }
-  },
   methods : {
     removeUser(idFb){
       this.$emit('removeUser', idFb)
-    },
-    showMenuAddPlayerFunction() {
-      this.$store.state.showMenuAddPlayer = !this.$store.state.showMenuAddPlayer;
-    },
+    }
   }
 }
 </script>
 <template>
   <div class="playersList">
-    <h3 >Joueurs : <span style="cursor: pointer" @click="showMenuAddPlayerFunction"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
+    <h3 >Joueurs :
+      <span class="pointer" @click="this.$store.commit('setShowMenuAddPlayer', !this.$store.getters.getShowMenuAddPlayer)"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span>
+      <span class="pointer" style="margin-left: 1vw" @click="this.$store.commit('setShowModalPlayersQrcodes', !this.$store.getters.getShowModalPlayersQrcodes)"><font-awesome-icon icon="fa-solid fa-qrcode"/></span>
+    </h3>
     <Players/>
   </div>
 </template>

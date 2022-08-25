@@ -33,6 +33,7 @@ const store = createStore({
             spotifyDeviceId : '',
             spotifyMessage : 'Se connecter à Spotify',
             showMenuAddPlayer: false,
+            showModalPlayersQrcodes: false,
             clicker: '',
             showModal: false,
             blur: 0,
@@ -65,6 +66,12 @@ const store = createStore({
         showModal(state, isShowModal) {
             state.showModal = isShowModal;
         },
+        setShowModalPlayersQrcodes(state, showModalPlayersQrcodes) {
+            state.showModalPlayersQrcodes = showModalPlayersQrcodes;
+        },
+        setShowMenuAddPlayer(state, showMenuAddPlayer) {
+            state.showMenuAddPlayer = showMenuAddPlayer;
+        },
         setBlur(state, blur){
             state.blur = blur;
         },
@@ -88,7 +95,7 @@ const store = createStore({
         },
         setSpotifyMessage(state, spotifyMessage) {
             state.spotifyMessage = spotifyMessage;
-        },
+        }
     },
     getters: {
         getClicker(state){
@@ -118,6 +125,12 @@ const store = createStore({
         getSpotifyMessage(state) {
             return state.spotifyMessage;
         },
+        getShowModalPlayersQrcodes(state){
+            return state.showModalPlayersQrcodes;
+        },
+        getShowMenuAddPlayer(state) {
+            return state.showMenuAddPlayer;
+        }
     },
     actions:{
         changeModalStatus(context, params){
