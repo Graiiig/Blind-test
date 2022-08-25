@@ -1,5 +1,5 @@
 <script>
-import {auth, provider, ref, db, onValue, signInWithPopup, signOut} from '@/assets/js/firebase';
+import {auth, provider, ref, db, onValue, signInAnonymously, signOut} from '@/assets/js/firebase';
 export default {
   data() {
     return {
@@ -8,7 +8,7 @@ export default {
   },
   methods : {
     requestGoogleAuth() {
-      signInWithPopup(auth, provider)
+      signInAnonymously(auth, provider)
           .then((result) => {
             this.messageBoutonGoogle = 'Connecté en tant que ' + result.user.displayName + ' (Cliquer pour se déconnecter)'
       });
