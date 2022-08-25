@@ -37,7 +37,7 @@ export default {
 </script>
 <template>
   <router-link :to="'/#access_token='+this.$store.state.spotifyToken"><font-awesome-icon icon="fa-solid fa-home" /></router-link>
-  <div style="text-align: center; flex-direction: column; align-items: center; height: 50vh;justify-content: space-evenly;" class="card borderColored flex">
+  <div style="text-align: center; flex-direction: column; align-items: center; height: 50vh;justify-content: space-evenly;" class="flex">
       <span style="font-size: 3.5vh">Joueur/Joueuse : {{username}}</span>
       <div @click="setBuzzerClicker" class="buzzer" style="font-size: 4.5vh"> JE SAIIIS !!!</div>
   </div>

@@ -70,6 +70,5 @@ export default {
   width: 50%;
   height: 33vh;
   padding: 2vh;
-  border-radius: 5%;
 }
 </style>
