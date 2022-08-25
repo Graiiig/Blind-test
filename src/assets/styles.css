@@ -1,21 +1,39 @@
 @import "./base.css";
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
 
 #app{
     background-color: #111436;
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
+    font-family: 'Space Mono', monospace;
 }
 
 #musicCard{
-    width: 50%;
-    height: 75vh;
-    margin-top: 2%;
+    width: 75%;
+    height: 100vh;
+    /*margin-top: 2%;*/
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.qrcodeMenu{
+    position: fixed;
+    z-index: 999;
+    top: 10vh;
+    left: 10vw;
+    width: 80%;
+    height: 80vh;
+    padding: 2vh;
+    flex-direction: column;
+    background-color: #111436;
 }
 
 .imgMusic{
     filter: blur(1rem);
-    width: 20vw
+    width: 45vh
 }
 
 .imgMusicCard{
@@ -55,24 +73,42 @@ body, html {
 }
 
 #loginSpotify{
-    float: right;
+    /*float: right;*/
     margin-top: 10%;
-    width: 30vh;
+    width: 32vh;
+    align-self: center;
 }
 
 .card{
-    margin-left: 37.5vw;
-    width: 25vw;
+    /*margin-left: 37.5vw;*/
+    width: fit-content;
     margin-top: 1%;
 }
 
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: rgba(215, 131, 47, 0.94);
+    width: 25%;
+    border-right: #111436 0.5vw solid
+}
+
+.sidebar > hr {
+    width: 75%;
+    align-self: center;
+    margin-top: 2vh;
+    color: #fff;
+}
+
 .borderColored{
-    background-color: #262335;
-    background-image: radial-gradient(circle at 100% 100%, transparent 15px, #d82bfd 15px, #d82bfd 20px, transparent 20px), linear-gradient(to right, #d82bfd, #304ffe), radial-gradient(circle at 0% 100%, transparent 15px, #304ffe 15px, #304ffe 20px, transparent 20px), linear-gradient(to bottom, #304ffe, #7c219e), radial-gradient(circle at 0% 0%, transparent 15px, #7c219e 15px, #7c219e 20px, transparent 20px), linear-gradient(to left, #7c219e, #fb9804), radial-gradient(circle at 100% 0%, transparent 15px, #fb9804 15px, #fb9804 20px, transparent 20px), linear-gradient(to top, #fb9804, #d82bfd);
-    background-size: 20px 20px, calc(100% - 40px) 5px, 20px 20px, 5px calc(100% - 40px);
-    background-position: top left,top center,top right,center right, bottom right,bottom center,bottom left,center left;
-    background-repeat: no-repeat;
-    border-radius: 3%;
+    background-color: rgba(90, 78, 153, 0.58);
+
+    /*background-image: radial-gradient(circle at 100% 100%, transparent 15px, #d82bfd 15px, #d82bfd 20px, transparent 20px), linear-gradient(to right, #d82bfd, #304ffe), radial-gradient(circle at 0% 100%, transparent 15px, #304ffe 15px, #304ffe 20px, transparent 20px), linear-gradient(to bottom, #304ffe, #7c219e), radial-gradient(circle at 0% 0%, transparent 15px, #7c219e 15px, #7c219e 20px, transparent 20px), linear-gradient(to left, #7c219e, #fb9804), radial-gradient(circle at 100% 0%, transparent 15px, #fb9804 15px, #fb9804 20px, transparent 20px), linear-gradient(to top, #fb9804, #d82bfd);*/
+    /*background-size: 20px 20px, calc(100% - 40px) 5px, 20px 20px, 5px calc(100% - 40px);*/
+    /*background-position: top left,top center,top right,center right, bottom right,bottom center,bottom left,center left;*/
+    /*background-repeat: no-repeat;*/
+    /*border-radius: 3%;*/
 }
 
 .playersList{
@@ -80,7 +116,7 @@ body, html {
     height: fit-content;
     min-height: 15vh;
     border-radius: 6%;
-    width: 15%;
+    /*width: fit-content;*/
     margin-top: 3%
 }
 
@@ -122,8 +158,12 @@ body, html {
 
 .addUser{
     /*width: 25%;*/
-    height: 10%;
+    /*height: 10%;*/
     align-content: center;
+}
+
+#timerRange{
+    width: 80%;
 }
 
 .boutonsLogin {
@@ -139,6 +179,10 @@ body, html {
 
     #app{
         height: 200vh;
+    }
+
+    .sidebar {
+        width: 80%;
     }
 
     main {

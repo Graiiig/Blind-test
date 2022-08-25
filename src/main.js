@@ -10,15 +10,16 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {path : '/', name: 'Home', component: Home, props: true},
-        {path : '/buzzer/:username', name: 'Buzzer', component: Buzzer, props: true},
+        {path : '/buzzer/:username', name: 'Buzzer', component: Buzzer},
     ]
 })
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlay, faPause, faPlusCircle, faMusic, faTrashCan, faHome, faCompactDisc, faMicrophoneLines, faCircleXmark, faForwardStep, faBackwardStep} from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faPause, faPlusCircle, faMusic, faTrashCan, faHome, faCompactDisc, faMicrophoneLines, faCircleXmark, faForwardStep, faBackwardStep,
+    faQrcode} from "@fortawesome/free-solid-svg-icons";
 // Ajout des icones dont on a besoin à la librairie
-library.add(faPlay, faPause, faPlusCircle, faMusic, faTrashCan, faHome, faCompactDisc, faMicrophoneLines, faCircleXmark, faForwardStep, faBackwardStep);
+library.add(faPlay, faPause, faPlusCircle, faMusic, faTrashCan, faHome, faCompactDisc, faMicrophoneLines, faCircleXmark, faForwardStep, faBackwardStep, faQrcode);
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 createApp(App)

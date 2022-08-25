@@ -1,6 +1,3 @@
-<script setup>
-  import GoogleLogin from './GoogleLogin.vue'
-</script>
 <script>
 import {db, ref, set} from "@/assets/js/firebase";
 
@@ -15,11 +12,6 @@ export default {
       messageSpotify: 'Se connecter à Spotify',
       spotifyPlayerName: 'Blind test by Graig',
     }
-  },
-  props : {
-    clicker : String,
-    messageBoutonGoogle : String,
-    isMusicPlaying : Boolean
   },
   watch : {
     'getIsMusicPlaying'(isMusicPlaying) {
@@ -36,7 +28,11 @@ export default {
     'goNextTrack'(isGoNextTrack){
       if(isGoNextTrack){
         this.$store.commit('setCount', 10);
+        this.$store.commit('setCountMax', 10);
       }
+    },
+    'getRequestSpotifyAuth'(){
+      this.requestSpotifyAuth();
     }
   },
   methods: {
@@ -102,7 +98,8 @@ export default {
         console.log(player.getCurrentState())
         console.log('Ready with Device ID', device_id);
         this.$store.commit('setSpotifyDeviceId', device_id);
-        this.messageSpotify = 'En attente de séléction de "' + this.spotifyPlayerName + '" dans l\'appli Spotify !'
+        this.$store.commit('setSpotifyMessage','En attente de séléction de "' + this.spotifyPlayerName + '" dans l\'appli Spotify !');
+        this.$store.dispatch('transferSpotifyPlaybackToDevice');
       });
 
       // Not Ready
@@ -134,7 +131,7 @@ export default {
         console.log("image", current_track.album.images[2].url)
         this.title = current_track.name;
         this.artist = current_track.artists[0].name;
-        this.messageSpotify = 'Appli Spotify connectée !';
+        this.$store.commit('setSpotifyMessage', 'Appli Spotify connectée !');
         this.imgLink = current_track.album.images[2].url;
       });
 
@@ -165,6 +162,12 @@ export default {
     },
     getCount() {
       return this.$store.getters.getCount;
+    },
+    getCountMax() {
+      return this.$store.getters.getCountMax;
+    },
+    getRequestSpotifyAuth() {
+      return this.$store.getters.getRequestSpotifyAuth;
     }
   }
 }
@@ -186,18 +189,16 @@ export default {
         <br>
         <br>
         <br>
-        <span><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ this.$store.getters.getArtist ? artist : 'non trouvé' }}</span>
+        <span style="font-size: 2vw;" :style="this.$store.getters.getArtist ? 'color : #5fe85f' : 'color : white'"><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ this.$store.getters.getArtist ? artist : 'non trouvé' }}</span>
         <br>
-        <span> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{this.$store.getters.getTitle ? title : 'non trouvé'}}</span>
+        <span style="font-size: 2vw;" :style="this.$store.getters.getTitle ? 'color : #5fe85f' : 'color : white'"> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{this.$store.getters.getTitle ? title : 'non trouvé'}}</span>
         <br>
+        <br>
+        <input type="range" id="timerRange" name="timerRange" min="0" :max="this.$store.getters.getCountMax"
+               :value="this.$store.getters.getCountMax - this.$store.getters.getCount">
         <br>
       </div>
       <br>
     </div>
-  </div>
-  <div class="flex boutonsLogin" style="flex-direction: column; align-items: center;">
-
-  <span id="loginSpotify" class="button" @click="requestSpotifyAuth()">{{messageSpotify}}</span>
-  <GoogleLogin :message-bouton-google="messageBoutonGoogle"/>
   </div>
 </template>
