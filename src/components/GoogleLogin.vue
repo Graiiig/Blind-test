@@ -42,7 +42,9 @@ export default {
                     "nom": ""
                   },
                   "users": {
-                    "nom": "joueur par défaut"
+                    "idDefaut" : {
+                      "nom": "joueur par défaut"
+                    }
                   }
                 });
               }
