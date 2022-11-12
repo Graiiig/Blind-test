@@ -19,7 +19,7 @@ export default {
     },
     // Suppression d'un utilisateur dans la BDD
     removeUser(idFb) {
-      remove(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS + '/' + idFb));
+      remove(ref(db, import.meta.env.VITE_FIREBASE_GOOGLE_USERS + '/' + this.$store.getters.getGoogleUid + '/' + import.meta.env.VITE_FIREBASE_DB_USERS + '/' + idFb));
     },
   },
   computed : {
