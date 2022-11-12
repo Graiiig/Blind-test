@@ -1,13 +1,11 @@
 <script>
 
+import {db, ref, remove} from "@/assets/js/firebase";
+
 export default {
   data() {
     return {
     }
-  },
-  props : {
-    users : Object,
-    spotifyToken : String
   },
   methods : {
     goToBuzzer(user){
@@ -15,21 +13,22 @@ export default {
       this.$router.push({
         name: "Buzzer",
         params: {
-          points: userParsed.points,
-          username : userParsed.username,
-          spotifyToken : this.spotifyToken
+          username : userParsed.username
         },
       });
+    },
+    // Suppression d'un utilisateur dans la BDD
+    removeUser(idFb) {
+      remove(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS + '/' + idFb));
     },
   }
 }
 </script>
 <template>
-  <div v-for="(user, key) in users">
-    <div style="display: flex;align-items: center;">
-      <img style="width:50px" :src="user.profilePicture" alt="Image de profile d'un utilisateur"/>
+    <div v-for="(user, key) in this.$store.getters.getUsers" style="display: flex;align-items: center; margin-top: 2vh;justify-content: space-between;">
+<!--      <img style="width:50px" :src="user.profilePicture" alt="Image de profile d'un utilisateur"/>-->
+      <img style="width:50px" src="https://picsum.photos/400" alt="Image de profile d'un utilisateur"/>
       <span style="margin-left: 1%"  @click="goToBuzzer(user)">{{ user.username }} ({{user.points}} points)</span>
-      <span style="margin-left: 7%; color: #c03333; cursor: pointer" @click="$emit('removeUser', key)"><font-awesome-icon icon="fa-solid fa-trash-can"/></span>
+      <span style="margin-left: 7%; color: #c03333; cursor: pointer" @click="removeUser(key)"><font-awesome-icon icon="fa-solid fa-trash-can"/></span>
     </div>
-  </div>
 </template>

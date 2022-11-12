@@ -2,15 +2,8 @@
   import Players from "./Players.vue";
 </script>
 <script>
+
 export default {
-  data() {
-    return {
-    }
-  },
-  props : {
-    users : Object,
-    spotifyToken : String
-  },
   methods : {
     removeUser(idFb){
       this.$emit('removeUser', idFb)
@@ -19,8 +12,11 @@ export default {
 }
 </script>
 <template>
-  <div class="borderColored playersList">
-    <h3 >Joueurs : <span style="cursor: pointer" @click="$emit('showMenuAddPlayer')"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span></h3>
-    <Players :spotifyToken="spotifyToken" :users="users" @remove-user="removeUser"/>
+  <div class="playersList">
+    <h3 >Joueurs :
+      <span class="pointer" @click="this.$store.commit('setShowMenuAddPlayer', !this.$store.getters.getShowMenuAddPlayer)"><font-awesome-icon icon="fa-solid fa-plus-circle" /></span>
+      <span class="pointer" style="margin-left: 1vw" @click="this.$store.commit('setShowModalPlayersQrcodes', !this.$store.getters.getShowModalPlayersQrcodes)"><font-awesome-icon icon="fa-solid fa-qrcode"/></span>
+    </h3>
+    <Players/>
   </div>
 </template>

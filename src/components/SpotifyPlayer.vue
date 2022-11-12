@@ -1,51 +1,57 @@
-<script setup>
-  import GoogleLogin from './GoogleLogin.vue'
-</script>
 <script>
+import {db, ref, set} from "@/assets/js/firebase";
+
 let player;
 
 export default {
   data() {
     return {
-      currentPlaying: 'Pas d\'écoute en cours',
+      title: 'Pas d\'écoute en cours',
+      artist : 'Pas d\'écoute en cours',
       imgLink: 'https://picsum.photos/400',
       messageSpotify: 'Se connecter à Spotify',
-      playerName: 'Blind test by Graig',
-      spotifyToken : ''
+      spotifyPlayerName: 'Blind test by Graig',
     }
   },
-  props : {
-    isMusicPlaying : Boolean,
-    clicker : String,
-    setNextTrack : Number,
-    messageBoutonGoogle : String
-  },
   watch : {
-    clicker(val) {
-      this.togglePlayPlayer();
+    'getIsMusicPlaying'(isMusicPlaying) {
+      // Si la musique est à play sur l'appli, on play sur spotify
+      if(isMusicPlaying){
+        player.resume()
+      }
+      // Sinon pause
+      else {
+        player.pause()
+      }
     },
-    spotifyToken() {
-      this.$emit('setMusicPlayerStatus', {
-        isMusicPlaying : false,
-        spotifyToken : this.spotifyToken
-      });
+    // On vérifie si on doit passer au morceau suivant
+    'goNextTrack'(isGoNextTrack){
+      if(isGoNextTrack){
+        this.$store.commit('setCount', 10);
+        this.$store.commit('setCountMax', 10);
+      }
     },
-    setNextTrack(){
-      this.nextTrackPlayer();
+    'getRequestSpotifyAuth'(){
+      this.requestSpotifyAuth();
     }
   },
   methods: {
+    // Fonction pour mettre à jour des données sur Firebase
+    setDataFirebase(node, data) {
+      set(ref(db, node), data);
+    },
     // Permet de faire play/pause
     togglePlayPlayer() {
       player.togglePlay();
-      this.$emit('setMusicPlayerStatus', {
-        isMusicPlaying : !this.isMusicPlaying,
-        spotifyToken : this.spotifyToken
-    });
+      this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP+'/isMusicPlaying', !this.$store.state.isMusicPlaying)
     },
+    // Permet de passer au morceau suivant
     nextTrackPlayer(){
-      player.nextTrack()
+      player.nextTrack();
+      this.$store.commit('setTitle', false);
+      this.$store.commit('setArtist', false);
     },
+    // Permet de passer au morceau précédent
     previousTrackPlayer(){
       player.previousTrack()
     },
@@ -62,6 +68,10 @@ export default {
     },
   },
   created() {
+    // La musique est en pause au (re)chargement de la page
+    this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP + '/isMusicPlaying', false);
+
+    let vm = this;
     // Initie la création du player spotify
     window.onSpotifyWebPlaybackSDKReady = () => {
       // Après clique sur le bouton du login, l'access token se retrouve dans l'url
@@ -72,12 +82,12 @@ export default {
         token = params.split('&');
         token = token[0].slice(14);
       }
-
-      this.spotifyToken = token;
+      // vm.$store.commit('setSpotifyToken', token)
       player = new Spotify.Player({
-        name: this.playerName,
+        name: this.spotifyPlayerName,
         getOAuthToken: cb => {
           cb(token);
+          vm.$store.commit('setSpotifyToken', token)
         },
         volume: 0.5
       });
@@ -87,7 +97,9 @@ export default {
       player.addListener('ready', ({device_id}) => {
         console.log(player.getCurrentState())
         console.log('Ready with Device ID', device_id);
-        this.messageSpotify = 'En attente de séléction de "' + this.playerName + '" dans l\'appli Spotify !'
+        this.$store.commit('setSpotifyDeviceId', device_id);
+        this.$store.commit('setSpotifyMessage','En attente de séléction de "' + this.spotifyPlayerName + '" dans l\'appli Spotify !');
+        this.$store.dispatch('transferSpotifyPlaybackToDevice');
       });
 
       // Not Ready
@@ -117,12 +129,23 @@ export default {
         console.log('Position in Song', position);
         console.log('Duration of Song', duration);
         console.log("image", current_track.album.images[2].url)
-        this.currentPlaying = current_track.name;
-        this.messageSpotify = 'Appli Spotify connectée !';
+        this.title = current_track.name;
+        this.artist = current_track.artists[0].name;
+        this.$store.commit('setSpotifyMessage', 'Appli Spotify connectée !');
         this.imgLink = current_track.album.images[2].url;
       });
 
       player.connect();
+
+      setInterval(function () {
+        if(vm.getCount > 0 && vm.getIsMusicPlaying){
+          vm.$store.commit('decrementCount');
+        }
+        else if (vm.getCount === 0 && vm.getIsMusicPlaying)
+        {
+          vm.$store.dispatch('nextTrack');
+        }
+      }, 1000)
     }
   },
   mounted() {
@@ -130,30 +153,52 @@ export default {
     spotify.setAttribute('src', 'https://sdk.scdn.co/spotify-player.js')
     document.head.appendChild(spotify)
   },
+  computed : {
+    goNextTrack(){
+      return this.$store.getters.getTitle && this.$store.getters.getArtist;
+    },
+    getIsMusicPlaying() {
+      return this.$store.getters.getIsMusicPlaying;
+    },
+    getCount() {
+      return this.$store.getters.getCount;
+    },
+    getCountMax() {
+      return this.$store.getters.getCountMax;
+    },
+    getRequestSpotifyAuth() {
+      return this.$store.getters.getRequestSpotifyAuth;
+    }
+  }
 }
 </script>
 <template>
   <div id="musicCard" class="borderColored">
-    <span class="musicPlayingIcon" :style="isMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="isMusicPlaying" /></span>
+    <span class="musicPlayingIcon" :style="this.$store.getters.getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="this.$store.state.isMusicPlaying" /></span>
+    <span class="" style="float: left;margin-top: 2%;
+    margin-left: 4%;
+    font-size: 4vw;" :style="this.$store.getters.getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'">{{this.$store.getters.getCount}}</span>
     <br>
     <div class="space-around flex imgMusicCard">
       <img class="imgMusic" :src="imgLink" alt="image album">
       <br>
       <div class="row">
         <span id="previousTrack" class="button" @click="previousTrackPlayer()"><font-awesome-icon icon="fa-solid fa-backward-step"/></span>
-        <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="isMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="isMusicPlaying"/></span>
+        <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="this.$store.isMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="this.$store.state.isMusicPlaying"/></span>
         <span id="nextTrack" class="button" @click="nextTrackPlayer()"><font-awesome-icon icon="fa-solid fa-forward-step"/></span>
         <br>
         <br>
         <br>
-        <span>Musique en cours : {{currentPlaying}}</span>
+        <span style="font-size: 2vw;" :style="this.$store.getters.getArtist ? 'color : #5fe85f' : 'color : white'"><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ this.$store.getters.getArtist ? artist : 'non trouvé' }}</span>
+        <br>
+        <span style="font-size: 2vw;" :style="this.$store.getters.getTitle ? 'color : #5fe85f' : 'color : white'"> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{this.$store.getters.getTitle ? title : 'non trouvé'}}</span>
+        <br>
+        <br>
+        <input type="range" id="timerRange" name="timerRange" min="0" :max="this.$store.getters.getCountMax"
+               :value="this.$store.getters.getCountMax - this.$store.getters.getCount">
+        <br>
       </div>
       <br>
     </div>
-  </div>
-  <div class="flex boutonsLogin" style="flex-direction: column; align-items: center;">
-
-  <span id="loginSpotify" class="button" @click="requestSpotifyAuth()">{{messageSpotify}}</span>
-  <GoogleLogin :message-bouton-google="messageBoutonGoogle"/>
   </div>
 </template>

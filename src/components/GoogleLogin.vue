@@ -1,45 +1,52 @@
 <script>
-import {auth, provider, signInWithPopup, signOut} from '../assets/js/firebase.js';
+import {auth, provider, ref, db, onValue, signInAnonymously, signOut} from '@/assets/js/firebase';
 export default {
   data() {
     return {
-      messageLoginGoogle: 'Se connecter avec Google'
-    }
-  },
-  props : {
-    messageBoutonGoogle : String
-  },
-  watch: {
-    messageBoutonGoogle() {
-      this.messageLoginGoogle = this.messageBoutonGoogle;
+      messageBoutonGoogle: 'Se connecter avec Google'
     }
   },
   methods : {
     requestGoogleAuth() {
-      signInWithPopup(auth, provider)
+      signInAnonymously(auth, provider)
           .then((result) => {
-            this.messageLoginGoogle = 'Connecté en tant que ' + result.user.displayName + ' (Cliquer pour se déconnecter)'
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            const credential = provider.credentialFromResult(result);
-            const token = credential.accessToken;
-            // The signed-in user info.
-            const user = result.user;
-            // ...
-          }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The AuthCredential type that was used.
-        // const credential = provider.credentialFromError(error);
+            this.messageBoutonGoogle = 'Connecté en tant que ' + result.user.displayName + ' (Cliquer pour se déconnecter)'
       });
     },
     requestGoogleLogOut(){
       signOut(auth);
-      this.messageLoginGoogle = 'Se connecter avec Google';
+      this.messageBoutonGoogle = 'Se connecter avec Google';
+    },
+    getUsers() {
+      // Récupération des users en BDD à la création du component
+      let userDb = ref(db, import.meta.env.VITE_FIREBASE_DB_USERS);
+      onValue(userDb, (data) => {
+        this.$store.commit('setUsers',data.val());
+      });
+    },
+  },
+  computed: {
+    isGoogleConnected(){
+      return this.messageBoutonGoogle !== 'Se connecter avec Google';
     }
+  },
+  created() {
+    let vm = this;
+    auth.onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+        vm.messageBoutonGoogle = 'Connecté en tant que ' + user.displayName + ' (Cliquer pour se déconnecter)';
+        // // Récupération des users en BDD à la connexion Google
+        vm.getUsers();
+      } else {
+        // No user is signed in.
+        vm.messageBoutonGoogle = 'Se connecter avec Google';
+        vm.users = {};
+      }
+    });
   }
 }
 </script>
 <template>
-  <span id="loginGoogle" class="button" @click="messageLoginGoogle === 'Se connecter avec Google' ? requestGoogleAuth() : requestGoogleLogOut()">{{ messageLoginGoogle }}</span>
+  <span id="loginGoogle" class="button" :style="this.isGoogleConnected ? 'display : none' : 'display : block'" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageBoutonGoogle }}</span>
 </template>
