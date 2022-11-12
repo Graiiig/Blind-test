@@ -2,7 +2,7 @@
   <router-view></router-view>
 </template>
 <script>
-import {db, onValue, ref} from "@/assets/js/firebase";
+import {db, onChildChanged, ref} from "@/assets/js/firebase";
 
 export default {
   created : function(){
@@ -25,9 +25,7 @@ export default {
     // Récupération des datas depuis Firebase, dernier qui a buzzé + status musique
 
     // Récupération des datas depuis Firebase, dernier qui a buzzé + status musique
-    // Récupération du google UID
     let googleUid = "";
-    if (this.$route.params.googleUid !== undefined || this.$store.getters.getGoogleUid !== '') {
 
       if(this.$route.params.googleUid !== undefined){
         googleUid = this.$route.params.googleUid;
@@ -38,14 +36,12 @@ export default {
       let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
       // La musique est en pause au (re)chargement de la page
       let dbFb = ref(db, userNode + '/' + googleUid + '/');
-      onValue(dbFb, (data) => {
-console.log(data)
+      onChildChanged(dbFb, (data) => {
         let dataFromDb = data.val();
         this.$store.commit('setIsMusicPlaying', dataFromDb.appSettings.isMusicPlaying)
         this.$store.commit('setClicker', dataFromDb.clicker.nom)
         this.$store.commit('setUsers', dataFromDb.users)
       });
-    }
   }
 }
 </script>

@@ -64,8 +64,8 @@ const store = createStore({
         setClicker(state, clicker){
             state.clicker = clicker;
         },
-        showModal(state, isShowModal) {
-            state.showModal = isShowModal;
+        showModal(state, showModal) {
+            state.showModal = showModal;
         },
         setShowModalPlayersQrcodes(state, showModalPlayersQrcodes) {
             state.showModalPlayersQrcodes = showModalPlayersQrcodes;
@@ -137,6 +137,9 @@ const store = createStore({
         },
         getGoogleUid(state) {
             return state.googleUid;
+        },
+        getIsShowModale(state){
+            return state.showModal
         }
     },
     actions:{

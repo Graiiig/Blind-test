@@ -52,7 +52,7 @@ export default {
       return this.$store.getters.getClicker;
     },
     getIsShowModal(){
-      return this.$store.getters.getIsShowModal;
+      return this.$store.getters.getIsShowModale;
     },
     getTitle() {
       return this.$store.getters.getTitle;

@@ -10,7 +10,7 @@ export default {
   },
   methods : {
     setBuzzerClicker : function () {
-      if(this.$store.getters.getIsMusicPlaying){
+      if(this.isMusicPlaying){
         let clicker;
         let clickerNode = import.meta.env.VITE_FIREBASE_DB_CLICKER;
         let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
@@ -35,6 +35,9 @@ export default {
   computed : {
     getSpotifyToken(){
       return this.$store.getters.getSpotifyToken;
+    },
+    isMusicPlaying(){
+      return this.$store.getters.getIsMusicPlaying;
     }
   },
   mounted() {
@@ -47,7 +50,7 @@ export default {
 <template>
   <router-link :to="'/#access_token=' + getSpotifyToken"><font-awesome-icon icon="fa-solid fa-home" /></router-link>
   <div style="text-align: center; flex-direction: column; align-items: center; height: 50vh;justify-content: space-evenly;" class="flex">
-      <span style="font-size: 3.5vh">Joueur/Joueuse : {{username}}</span>
+      <span style="font-size: 3.5vh">Joueur/Joueuse : {{ username }}</span>
       <div @click="setBuzzerClicker" class="buzzer" style="font-size: 4.5vh"> JE SAIIIS !!!</div>
   </div>
 </template>
