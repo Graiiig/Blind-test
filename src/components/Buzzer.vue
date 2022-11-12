@@ -5,6 +5,7 @@ export default {
   data() {
     return {
       username : {},
+      googleUid : "",
     }
   },
   methods : {
@@ -12,6 +13,8 @@ export default {
       if(this.$store.getters.getIsMusicPlaying){
         let clicker;
         let clickerNode = import.meta.env.VITE_FIREBASE_DB_CLICKER;
+        let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+        clickerNode = userNode + '/' + this.googleUid + '/' + clickerNode;
 
         // On récupère le nombre de points actuels
         onValue(ref(db, clickerNode), (snapshot) => {
@@ -32,6 +35,7 @@ export default {
   mounted() {
     // On récupère les utilisateurs passés en paramètre de la route
     this.username = this.$route.params.username;
+    this.googleUid = this.$route.params.googleUid;
   }
 }
 </script>

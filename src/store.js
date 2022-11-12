@@ -43,7 +43,8 @@ const store = createStore({
             count : 40,
             countMax : 40,
             users : {},
-            requestSpotifyAuth : 0
+            requestSpotifyAuth : 0,
+            googleUid : ""
         }
     }
     ,
@@ -95,6 +96,9 @@ const store = createStore({
         },
         setSpotifyMessage(state, spotifyMessage) {
             state.spotifyMessage = spotifyMessage;
+        },
+        setGoogleUid(state, googleUid) {
+            state.googleUid = googleUid;
         }
     },
     getters: {
@@ -130,6 +134,9 @@ const store = createStore({
         },
         getShowMenuAddPlayer(state) {
             return state.showMenuAddPlayer;
+        },
+        getGoogleUid(state) {
+            return state.googleUid;
         }
     },
     actions:{

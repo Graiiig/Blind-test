@@ -23,13 +23,29 @@ export default {
     document.querySelector('#app').style.backgroundImage = "url('https://images.unsplash.com/photo-1501612780327-45045538702b?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNDg3OTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2NTg1OTQ2Mzc&ixlib=rb-1.2.1&q=80')";
 
     // Récupération des datas depuis Firebase, dernier qui a buzzé + status musique
-    let dbFb = ref(db, '/');
-    onValue(dbFb, (data) => {
-      let dataFromDb = data.val();
-      this.$store.commit('setIsMusicPlaying', dataFromDb.appSettings.isMusicPlaying)
-      this.$store.commit('setClicker', dataFromDb.clicker.nom)
-      this.$store.commit('setUsers', dataFromDb.users)
-    });
+
+    // Récupération des datas depuis Firebase, dernier qui a buzzé + status musique
+    // Récupération du google UID
+    let googleUid = "";
+    if (this.$route.params.googleUid !== undefined || this.$store.getters.getGoogleUid !== '') {
+
+      if(this.$route.params.googleUid !== undefined){
+        googleUid = this.$route.params.googleUid;
+      }else {
+        googleUid = this.$store.getters.getGoogleUid;
+      }
+
+      let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+      // La musique est en pause au (re)chargement de la page
+      let dbFb = ref(db, userNode + '/' + googleUid + '/');
+      onValue(dbFb, (data) => {
+console.log(data)
+        let dataFromDb = data.val();
+        this.$store.commit('setIsMusicPlaying', dataFromDb.appSettings.isMusicPlaying)
+        this.$store.commit('setClicker', dataFromDb.clicker.nom)
+        this.$store.commit('setUsers', dataFromDb.users)
+      });
+    }
   }
 }
 </script>

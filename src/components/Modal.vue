@@ -20,10 +20,12 @@ export default {
     addPointsToUser(points){
       let newPoints;
       let userKey;
-      let userNode = import.meta.env.VITE_FIREBASE_DB_USERS;
+
+      let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+      let dbUsers = import.meta.env.VITE_FIREBASE_DB_USERS
 
       // On récupère le nombre de points actuels
-      onValue(ref(db, userNode), (snapshot) => {
+      onValue(ref(db, userNode + '/' + this.$store.getters.getGoogleUid + '/' + dbUsers), (snapshot) => {
         snapshot.forEach((childSnapshot) => {
           let user = childSnapshot.val();
           if (user.username === this.getClicker){

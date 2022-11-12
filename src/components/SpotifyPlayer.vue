@@ -43,7 +43,9 @@ export default {
     // Permet de faire play/pause
     togglePlayPlayer() {
       player.togglePlay();
-      this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP+'/isMusicPlaying', !this.$store.state.isMusicPlaying)
+      let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+      let dbApp = import.meta.env.VITE_FIREBASE_DB_APP
+      this.setDataFirebase(userNode + '/' + this.$store.getters.getGoogleUid + '/' + dbApp + '/isMusicPlaying', !this.$store.state.isMusicPlaying);
     },
     // Permet de passer au morceau suivant
     nextTrackPlayer(){
@@ -68,8 +70,10 @@ export default {
     },
   },
   created() {
+    let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+    let dbApp = import.meta.env.VITE_FIREBASE_DB_APP
     // La musique est en pause au (re)chargement de la page
-    this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP + '/isMusicPlaying', false);
+    this.setDataFirebase(userNode + '/' + this.$store.getters.getGoogleUid + '/' + dbApp + '/isMusicPlaying', false);
 
     let vm = this;
     // Initie la création du player spotify

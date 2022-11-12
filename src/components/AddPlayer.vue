@@ -17,8 +17,11 @@ export default {
       // Récupération d'un avatar random
       let profilePicture = 'https://avatars.dicebear.com/api/avataaars/' + id + '.svg'
 
+      let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+      let dbUsers = import.meta.env.VITE_FIREBASE_DB_USERS
+
       // On push vers firebase le nouvel utilisateur
-      push(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS), {
+      push(ref(db, userNode + '/' + this.$store.getters.getGoogleUid + '/' + dbUsers ), {
         "buzzerId": 0,
         "username": username,
         "profilePicture": profilePicture,

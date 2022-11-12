@@ -22,7 +22,9 @@ export default {
   },
   created(){
     // Récupère l'utilisateur depuis la BDD quand celui-ci clique sur le buzzer
-    let clickerDb = ref(db, import.meta.env.VITE_FIREBASE_DB_CLICKER);
+    let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+    let clicker = import.meta.env.VITE_FIREBASE_DB_CLICKER
+    let clickerDb = ref(db, userNode + '/' + this.$store.getters.getGoogleUid + '/' + clicker);
     onChildChanged(clickerDb, (data) => {
       if (this.$store.state.isMusicPlaying) {
         this.$store.commit('setClicker', data.val());
