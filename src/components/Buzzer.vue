@@ -32,6 +32,11 @@ export default {
       }
     }
   },
+  computed : {
+    getSpotifyToken(){
+      return this.$store.getters.getSpotifyToken;
+    }
+  },
   mounted() {
     // On récupère les utilisateurs passés en paramètre de la route
     this.username = this.$route.params.username;
@@ -40,7 +45,7 @@ export default {
 }
 </script>
 <template>
-  <router-link :to="'/#access_token='+this.$store.state.spotifyToken"><font-awesome-icon icon="fa-solid fa-home" /></router-link>
+  <router-link :to="'/#access_token=' + getSpotifyToken"><font-awesome-icon icon="fa-solid fa-home" /></router-link>
   <div style="text-align: center; flex-direction: column; align-items: center; height: 50vh;justify-content: space-evenly;" class="flex">
       <span style="font-size: 3.5vh">Joueur/Joueuse : {{username}}</span>
       <div @click="setBuzzerClicker" class="buzzer" style="font-size: 4.5vh"> JE SAIIIS !!!</div>

@@ -1,5 +1,10 @@
 <script>
 export default {
+  methods : {
+    setRequestSpotifyAuth(getTime){
+      this.$store.commit('setRequestSpotifyAuth', getTime)
+    }
+  },
   computed: {
     getTime() {
       // Génération d'un id pour trigger 'setRequestSpotifyAuth'
@@ -14,5 +19,5 @@ export default {
 </script>
 <template>
   <span id="loginSpotify" class="button"
-        @click="this.$store.commit('setRequestSpotifyAuth', getTime)">{{ getMessageSpotify }}</span>
+        @click="setRequestSpotifyAuth(getTime)">{{ getMessageSpotify }}</span>
 </template>

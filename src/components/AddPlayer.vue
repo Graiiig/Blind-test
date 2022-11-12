@@ -30,12 +30,17 @@ export default {
 
       // On cache le menu d'ajout d'un nouvel utilisateur
       this.$store.commit('setShowMenuAddPlayer', false)
-    },
+    }
+  },
+  computed : {
+    isShowMenuAddPlayer() {
+      return this.$store.getters.getShowMenuAddPlayer;
+    }
   }
 }
 </script>
 <template>
-  <div class="card" :style="this.$store.getters.getShowMenuAddPlayer ? 'visibility: visible;' : 'visibility: hidden;'" style="width: 100%; margin-top: 3%">
+  <div class="card" :style="isShowMenuAddPlayer ? 'visibility: visible;' : 'visibility: hidden;'" style="width: 100%; margin-top: 3%">
     <div class="addUser flex space-around">
       <input id="username" placeholder="Pseudo">
       <span id="addUser" class="button" @click="addUser">Ajouter un utilisateur</span>

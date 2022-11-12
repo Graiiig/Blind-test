@@ -21,11 +21,16 @@ export default {
     removeUser(idFb) {
       remove(ref(db, import.meta.env.VITE_FIREBASE_DB_USERS + '/' + idFb));
     },
+  },
+  computed : {
+    getUsers(){
+      return this.$store.getters.getUsers;
+    }
   }
 }
 </script>
 <template>
-    <div v-for="(user, key) in this.$store.getters.getUsers" style="display: flex;align-items: center; margin-top: 2vh;justify-content: space-between;">
+    <div v-for="(user, key) in getUsers" style="display: flex;align-items: center; margin-top: 2vh;justify-content: space-between;">
 <!--      <img style="width:50px" :src="user.profilePicture" alt="Image de profile d'un utilisateur"/>-->
       <img style="width:50px" src="https://picsum.photos/400" alt="Image de profile d'un utilisateur"/>
       <span style="margin-left: 1%"  @click="goToBuzzer(user)">{{ user.username }} ({{user.points}} points)</span>
