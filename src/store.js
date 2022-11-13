@@ -147,7 +147,7 @@ const store = createStore({
             context.commit('showModal', params.isShowModal);
             context.commit('setBlur', params.blur);
             context.commit('setClicker', "");
-            setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP + '/isMusicPlaying', params.isMusicPlaying);
+            setDataFirebase(import.meta.env.VITE_FIREBASE_GOOGLE_USERS + '/' + context.getters.getGoogleUid + '/' +import.meta.env.VITE_FIREBASE_DB_APP + '/isMusicPlaying', params.isMusicPlaying);
         },
         nextTrack(context, timeout = 0){
             let deviceId = context.state.spotifyDeviceId;

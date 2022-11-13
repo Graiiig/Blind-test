@@ -36,7 +36,7 @@ export default {
       });
 
       // On set le nouveau nombre de points
-      set(ref(db, userNode+'/'+userKey + '/points'), newPoints);
+      set(ref(db, userNode + '/' + this.$store.getters.getGoogleUid + '/' + dbUsers + '/' +userKey + '/points'), newPoints);
 
       this.$store.dispatch('changeModalStatus', {isShowModal: false, blur: 0, isMusicPlaying: true})
     },
