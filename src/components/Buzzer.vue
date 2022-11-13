@@ -8,6 +8,18 @@ export default {
       googleUid : "",
     }
   },
+  created() {
+    // Récupération des datas depuis Firebase, dernier qui a buzzé + status musique
+    let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+    // La musique est en pause au (re)chargement de la page
+    let dbFb = ref(db, userNode + '/' + this.getGoogleUid);
+    onValue(dbFb, (data) => {
+      let dataFromDb = data.val();
+      this.$store.commit('setIsMusicPlaying', dataFromDb.appSettings.isMusicPlaying)
+      this.$store.commit('setClicker', dataFromDb.clicker.nom)
+      this.$store.commit('setUsers', dataFromDb.users)
+    });
+  },
   methods : {
     setBuzzerClicker : function () {
       if(this.isMusicPlaying){
@@ -15,8 +27,7 @@ export default {
         let clickerNode = import.meta.env.VITE_FIREBASE_DB_CLICKER;
         let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
         clickerNode = userNode + '/' + this.googleUid + '/' + clickerNode;
-
-        // On récupère le nombre de points actuels
+        // On récupère le dernier clicker
         onValue(ref(db, clickerNode), (snapshot) => {
           snapshot.forEach((childSnapshot) => {
             clicker = childSnapshot.val();
@@ -38,6 +49,9 @@ export default {
     },
     isMusicPlaying(){
       return this.$store.getters.getIsMusicPlaying;
+    },
+    getGoogleUid() {
+        return this.$route.params.googleUid;
     }
   },
   mounted() {

@@ -35,7 +35,7 @@ export default {
 
     <div class="flex space-around" style="flex-wrap: wrap; margin-top: 2vh; overflow-y:scroll;">
       <div v-for="user in getUsers" class="flex" style="flex-direction: column; margin-left: 3vw; margin-top: 2vh">
-        <qrcode-vue :value="getUrl + getGoogleUid + '/' + user.username" :size="300" level="H" :background="'#'+Math.floor(Math.random() * 16777215).toString(16)"
+        <qrcode-vue :value="getUrl + 'buzzer/' + getGoogleUid + '/' + user.username" :size="300" level="H" :background="'#'+Math.floor(Math.random() * 16777215).toString(16)"
                     :foreground="'#'+Math.floor(Math.random() * 16777215).toString(16)"/>
         <a :href="getUrl + getGoogleUid + '/' + user.username">{{user.username}}</a>
       </div>

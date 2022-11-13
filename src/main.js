@@ -10,7 +10,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {path : '/', name: 'Home', component: Home, props: true},
-        {path : '/buzzer/:googleUid/:username', name: 'Buzzer', component: Buzzer},
+        {path : '/buzzer/:googleUid/:username', name: 'Buzzer', component: Buzzer, props: true},
     ]
 })
 
