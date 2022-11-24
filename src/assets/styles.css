@@ -147,6 +147,10 @@ body, html {
     display: flex;
 }
 
+.flex-column {
+    flex-direction: column;
+}
+
 .space-around{
     justify-content: space-around;
 }
