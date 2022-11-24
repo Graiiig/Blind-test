@@ -33,6 +33,11 @@ export default {
     },
     'getRequestSpotifyAuth'(){
       this.requestSpotifyAuth();
+    },
+    'getCount'(count){
+      if(count === 0){
+        this.nextTrackPlayer();
+      }
     }
   },
   methods: {
@@ -52,6 +57,13 @@ export default {
       player.nextTrack();
       this.$store.commit('setTitle', false);
       this.$store.commit('setArtist', false);
+      this.$store.commit('setCount', 40);
+      this.$store.commit('setCountMax', 40);
+    },
+    // Permet de passer au morceau suivant
+    setTitleAndArtist() {
+      this.$store.commit('setTitle', true);
+      this.$store.commit('setArtist', true);
     },
     // Permet de passer au morceau précédent
     previousTrackPlayer(){
@@ -195,7 +207,7 @@ export default {
       <div class="row">
         <span id="previousTrack" class="button" @click="previousTrackPlayer()"><font-awesome-icon icon="fa-solid fa-backward-step"/></span>
         <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="getIsMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="getIsMusicPlaying"/></span>
-        <span id="nextTrack" class="button" @click="nextTrackPlayer()"><font-awesome-icon icon="fa-solid fa-forward-step"/></span>
+        <span id="nextTrack" class="button" @click="setTitleAndArtist()"><font-awesome-icon icon="fa-solid fa-forward-step"/></span>
         <br>
         <br>
         <br>
