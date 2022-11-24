@@ -43,7 +43,8 @@ const store = createStore({
             count : 40,
             countMax : 40,
             users : {},
-            requestSpotifyAuth : 0
+            requestSpotifyAuth : 0,
+            googleUid : ""
         }
     }
     ,
@@ -63,8 +64,8 @@ const store = createStore({
         setClicker(state, clicker){
             state.clicker = clicker;
         },
-        showModal(state, isShowModal) {
-            state.showModal = isShowModal;
+        showModal(state, showModal) {
+            state.showModal = showModal;
         },
         setShowModalPlayersQrcodes(state, showModalPlayersQrcodes) {
             state.showModalPlayersQrcodes = showModalPlayersQrcodes;
@@ -95,6 +96,9 @@ const store = createStore({
         },
         setSpotifyMessage(state, spotifyMessage) {
             state.spotifyMessage = spotifyMessage;
+        },
+        setGoogleUid(state, googleUid) {
+            state.googleUid = googleUid;
         }
     },
     getters: {
@@ -130,6 +134,12 @@ const store = createStore({
         },
         getShowMenuAddPlayer(state) {
             return state.showMenuAddPlayer;
+        },
+        getGoogleUid(state) {
+            return state.googleUid;
+        },
+        getIsShowModale(state){
+            return state.showModal
         }
     },
     actions:{
@@ -137,7 +147,7 @@ const store = createStore({
             context.commit('showModal', params.isShowModal);
             context.commit('setBlur', params.blur);
             context.commit('setClicker', "");
-            setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP + '/isMusicPlaying', params.isMusicPlaying);
+            setDataFirebase(import.meta.env.VITE_FIREBASE_GOOGLE_USERS + '/' + context.getters.getGoogleUid + '/' +import.meta.env.VITE_FIREBASE_DB_APP + '/isMusicPlaying', params.isMusicPlaying);
         },
         nextTrack(context, timeout = 0){
             let deviceId = context.state.spotifyDeviceId;

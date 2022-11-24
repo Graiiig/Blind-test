@@ -1,5 +1,5 @@
 <script>
-import {auth, provider, ref, db, onValue, signInAnonymously, signOut} from '@/assets/js/firebase';
+import {set,auth, provider, ref, db, onValue, signInWithPopup, signOut, onAuthStateChanged} from '@/assets/js/firebase';
 export default {
   data() {
     return {
@@ -8,10 +8,60 @@ export default {
   },
   methods : {
     requestGoogleAuth() {
-      signInAnonymously(auth, provider)
-          .then((result) => {
-            this.messageBoutonGoogle = 'Connecté en tant que ' + result.user.displayName + ' (Cliquer pour se déconnecter)'
+      onAuthStateChanged(auth, (user) => {
+        // Si l'utilisateur est connecté, on récupère les infos de celui-ci
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          this.getAndSetUserDataInDb(user);
+        } else {
+          // Sinon on demande la connexion
+          signInWithPopup(auth, provider)
+              .then((result) => {
+                this.getAndSetUserDataInDb(result.user);
+              });
+        }
       });
+    },
+    getAndSetUserDataInDb(user){
+      let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS;
+      // On récupère les utilisateurs qui se sont déjà identifiés
+      onValue(ref(db, userNode + '/' + user.uid), (snapshot) => {
+
+        // Si l'utilisateur est déjà en bdd, on récupère ses infos
+        if (snapshot.val() !== null) {
+          // Récupération des datas depuis Firebase, dernier qui a buzzé + status musique
+          let dbFb = ref(db, userNode + '/' + user.uid);
+          onValue(dbFb, (data) => {
+            let dataFromDb = data.val();
+            this.$store.commit('setIsMusicPlaying', dataFromDb.appSettings.isMusicPlaying)
+            this.$store.commit('setClicker', dataFromDb.clicker.nom)
+            this.$store.commit('setUsers', dataFromDb.users)
+          });
+        } else {
+          // Sinon on set les infos du user en bdd
+          set(ref(db, userNode + '/' + user.uid), {
+            "email": user.email,
+            "name": user.displayName,
+            "appSettings": {
+              "isMusicPlaying": false,
+              "spotifyToken": ""
+            },
+            "clicker": {
+              "nom": ""
+            },
+            "users": {
+              "idDefaut": {
+                "nom": "joueur par défaut"
+              }
+            }
+          });
+        }
+      }, {
+        onlyOnce: true
+      });
+
+      this.$store.commit('setGoogleUid', user.uid)
     },
     requestGoogleLogOut(){
       signOut(auth);
@@ -31,6 +81,7 @@ export default {
     }
   },
   created() {
+    this.requestGoogleAuth()
     let vm = this;
     auth.onAuthStateChanged(function (user) {
       if (user) {
@@ -48,5 +99,5 @@ export default {
 }
 </script>
 <template>
-  <span id="loginGoogle" class="button" :style="this.isGoogleConnected ? 'display : none' : 'display : block'" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageBoutonGoogle }}</span>
+  <span id="loginGoogle" class="button" :style="this.isGoogleConnected ? 'display:none;' : ''" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageBoutonGoogle }}</span>
 </template>

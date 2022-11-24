@@ -55,6 +55,8 @@ body, html {
     padding: 1em;
     text-align: center;
     height: fit-content;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .button:hover{

@@ -33,6 +33,11 @@ export default {
     },
     'getRequestSpotifyAuth'(){
       this.requestSpotifyAuth();
+    },
+    'getCount'(count){
+      if(count === 0){
+        this.nextTrackPlayer();
+      }
     }
   },
   methods: {
@@ -43,13 +48,22 @@ export default {
     // Permet de faire play/pause
     togglePlayPlayer() {
       player.togglePlay();
-      this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP+'/isMusicPlaying', !this.$store.state.isMusicPlaying)
+      let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+      let dbApp = import.meta.env.VITE_FIREBASE_DB_APP
+      this.setDataFirebase(userNode + '/' + this.$store.getters.getGoogleUid + '/' + dbApp + '/isMusicPlaying', !this.$store.state.isMusicPlaying);
     },
     // Permet de passer au morceau suivant
     nextTrackPlayer(){
       player.nextTrack();
       this.$store.commit('setTitle', false);
       this.$store.commit('setArtist', false);
+      this.$store.commit('setCount', 40);
+      this.$store.commit('setCountMax', 40);
+    },
+    // Permet de passer au morceau suivant
+    setTitleAndArtist() {
+      this.$store.commit('setTitle', true);
+      this.$store.commit('setArtist', true);
     },
     // Permet de passer au morceau précédent
     previousTrackPlayer(){
@@ -68,8 +82,10 @@ export default {
     },
   },
   created() {
+    let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS
+    let dbApp = import.meta.env.VITE_FIREBASE_DB_APP
     // La musique est en pause au (re)chargement de la page
-    this.setDataFirebase(import.meta.env.VITE_FIREBASE_DB_APP + '/isMusicPlaying', false);
+    this.setDataFirebase(userNode + '/' + this.$store.getters.getGoogleUid + '/' + dbApp + '/isMusicPlaying', false);
 
     let vm = this;
     // Initie la création du player spotify
@@ -168,34 +184,40 @@ export default {
     },
     getRequestSpotifyAuth() {
       return this.$store.getters.getRequestSpotifyAuth;
-    }
+    },
+    getArtist(){
+      return this.$store.getters.getArtist;
+    },
+    getTitle(){
+      return this.$store.getters.getTitle;
+    },
   }
 }
 </script>
 <template>
   <div id="musicCard" class="borderColored">
-    <span class="musicPlayingIcon" :style="this.$store.getters.getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="this.$store.state.isMusicPlaying" /></span>
+    <span class="musicPlayingIcon" :style="getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'"><font-awesome-icon icon="fa-solid fa-compact-disc" :spin="getIsMusicPlaying" /></span>
     <span class="" style="float: left;margin-top: 2%;
     margin-left: 4%;
-    font-size: 4vw;" :style="this.$store.getters.getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'">{{this.$store.getters.getCount}}</span>
+    font-size: 4vw;" :style="getIsMusicPlaying ? 'opacity:1' : 'opacity:0.1'">{{ getCount }}</span>
     <br>
     <div class="space-around flex imgMusicCard">
       <img class="imgMusic" :src="imgLink" alt="image album">
       <br>
       <div class="row">
         <span id="previousTrack" class="button" @click="previousTrackPlayer()"><font-awesome-icon icon="fa-solid fa-backward-step"/></span>
-        <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="this.$store.isMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="this.$store.state.isMusicPlaying"/></span>
-        <span id="nextTrack" class="button" @click="nextTrackPlayer()"><font-awesome-icon icon="fa-solid fa-forward-step"/></span>
+        <span id="togglePlay" class="button" @click="togglePlayPlayer()"><font-awesome-icon :icon="getIsMusicPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'" :beat="getIsMusicPlaying"/></span>
+        <span id="nextTrack" class="button" @click="setTitleAndArtist()"><font-awesome-icon icon="fa-solid fa-forward-step"/></span>
         <br>
         <br>
         <br>
-        <span style="font-size: 2vw;" :style="this.$store.getters.getArtist ? 'color : #5fe85f' : 'color : white'"><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ this.$store.getters.getArtist ? artist : 'non trouvé' }}</span>
+        <span style="font-size: 2vw;" :style="getArtist ? 'color : #5fe85f' : 'color : white'"><font-awesome-icon icon="fa-solid fa-microphone-lines"/> Artiste : {{ getArtist ? artist : 'non trouvé' }}</span>
         <br>
-        <span style="font-size: 2vw;" :style="this.$store.getters.getTitle ? 'color : #5fe85f' : 'color : white'"> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{this.$store.getters.getTitle ? title : 'non trouvé'}}</span>
+        <span style="font-size: 2vw;" :style="getTitle ? 'color : #5fe85f' : 'color : white'"> <font-awesome-icon icon="fa-solid fa-compact-disc"/> Titre : {{getTitle ? title : 'non trouvé'}}</span>
         <br>
         <br>
-        <input type="range" id="timerRange" name="timerRange" min="0" :max="this.$store.getters.getCountMax"
-               :value="this.$store.getters.getCountMax - this.$store.getters.getCount">
+        <input type="range" id="timerRange" name="timerRange" min="0" :max="getCountMax"
+               :value="getCountMax - getCount">
         <br>
       </div>
       <br>

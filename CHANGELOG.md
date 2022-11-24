@@ -1,5 +1,11 @@
 # CHANGELOG.md
 
+## 1.0.4 (2022-11-24)
+
+- Environnement par utilisateur afin que plusieurs groupes puissent utiliser l'app en même temps
+- Quelques améliorations graphiques
+- Corrections concernant le décompte et le passage à la musique d'après
+
 ## 1.0.3 (2022-09-30)
 
 - Désactivation des boutons artiste/titre si déjà trouvé(s)
