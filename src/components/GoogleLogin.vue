@@ -100,7 +100,7 @@ export default {
 <template>
   <span id="loginGoogle" class="button" :style="!this.isGoogleConnected ? 'display:none;' : ''" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageBoutonGoogle }}</span>
   <div v-if="showGoogleLoginModal" class="modal">
-    <div class="flex flex-column">
+    <div class="flex flex-column connexion-texte">
       <span>
         Vous allez bientôt pouvoir vous amusez comme des petits fous, mais avant ça il faut que le "maître DJ" se connecte avec Google !
       </span>
@@ -113,11 +113,16 @@ export default {
 .modal {
   position: fixed;
   z-index: 999;
-  top: 20%;
-  left: 15%;
-  width: 70%;
-  height: 33vh;
-  padding: 2vh;
-  background-color: rgba(215, 131, 47, 0.9);
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 80vh;
+  padding: 6vh;
+  backdrop-filter: blur(10px);
+}
+
+.connexion-texte {
+  width: 50%;
+  margin: auto;
 }
 </style>
