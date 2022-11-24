@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## 1.0.5 (XXXX-XX-XX)
+
+- Amélioration processus connexion Google
+
 ## 1.0.4 (2022-11-24)
 
 - Environnement par utilisateur afin que plusieurs groupes puissent utiliser l'app en même temps
