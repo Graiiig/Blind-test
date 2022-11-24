@@ -8,20 +8,10 @@ export default {
   },
   methods : {
     requestGoogleAuth() {
-      onAuthStateChanged(auth, (user) => {
-        // Si l'utilisateur est connecté, on récupère les infos de celui-ci
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          this.getAndSetUserDataInDb(user);
-        } else {
-          // Sinon on demande la connexion
-          signInWithPopup(auth, provider)
-              .then((result) => {
-                this.getAndSetUserDataInDb(result.user);
-              });
-        }
-      });
+      signInWithPopup(auth, provider)
+          .then((result) => {
+            this.getAndSetUserDataInDb(result.user);
+          });
     },
     getAndSetUserDataInDb(user){
       let userNode = import.meta.env.VITE_FIREBASE_GOOGLE_USERS;
@@ -78,19 +68,28 @@ export default {
   computed: {
     isGoogleConnected(){
       return this.messageBoutonGoogle !== 'Se connecter avec Google';
+    },
+    showGoogleLoginModal(){
+      return this.$store.getters.getIsShowGoogleLoginModale;
     }
   },
   created() {
-    this.requestGoogleAuth()
     let vm = this;
     auth.onAuthStateChanged(function (user) {
+
+      // Si l'utilisateur est connecté, on récupère les infos de celui-ci
       if (user) {
+        vm.getAndSetUserDataInDb(user);
         // User is signed in.
         vm.messageBoutonGoogle = 'Connecté en tant que ' + user.displayName + ' (Cliquer pour se déconnecter)';
         // // Récupération des users en BDD à la connexion Google
         vm.getUsers();
-      } else {
-        // No user is signed in.
+        // Et on cache la modale de connexion Google
+        vm.$store.commit('setGoogleLoginModal', false);
+      }
+      // Sinon on affiche la modale pour se connecter avec Google
+      else {
+        vm.$store.commit('setGoogleLoginModal', true);
         vm.messageBoutonGoogle = 'Se connecter avec Google';
         vm.users = {};
       }
@@ -99,5 +98,26 @@ export default {
 }
 </script>
 <template>
-  <span id="loginGoogle" class="button" :style="this.isGoogleConnected ? 'display:none;' : ''" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageBoutonGoogle }}</span>
+  <span id="loginGoogle" class="button" :style="!this.isGoogleConnected ? 'display:none;' : ''" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageBoutonGoogle }}</span>
+  <div v-if="showGoogleLoginModal" class="modal">
+    <div class="flex flex-column">
+      <span>
+        Vous allez bientôt pouvoir vous amusez comme des petits fous, mais avant ça il faut que le "maître DJ" se connecte avec Google !
+      </span>
+      <span id="loginGoogle" class="button" @click="this.isGoogleConnected ? requestGoogleLogOut() : requestGoogleAuth()">{{ messageBoutonGoogle }}</span>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.modal {
+  position: fixed;
+  z-index: 999;
+  top: 20%;
+  left: 15%;
+  width: 70%;
+  height: 33vh;
+  padding: 2vh;
+  background-color: rgba(215, 131, 47, 0.9);
+}
+</style>
