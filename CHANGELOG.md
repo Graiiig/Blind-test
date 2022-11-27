@@ -1,6 +1,6 @@
 # CHANGELOG.md
 
-## 1.0.5 (XXXX-XX-XX)
+## 1.0.5 (2022-11-27)
 
 - Amélioration processus connexion Google
 
