@@ -44,7 +44,8 @@ const store = createStore({
             countMax : 40,
             users : {},
             requestSpotifyAuth : 0,
-            googleUid : ""
+            googleUid : "",
+            showGoogleLoginModal : false
         }
     }
     ,
@@ -99,6 +100,9 @@ const store = createStore({
         },
         setGoogleUid(state, googleUid) {
             state.googleUid = googleUid;
+        },
+        setGoogleLoginModal(state, showGoogleLoginModal) {
+            state.showGoogleLoginModal = showGoogleLoginModal;
         }
     },
     getters: {
@@ -140,6 +144,9 @@ const store = createStore({
         },
         getIsShowModale(state){
             return state.showModal
+        },
+        getIsShowGoogleLoginModale(state) {
+            return state.showGoogleLoginModal
         }
     },
     actions:{
